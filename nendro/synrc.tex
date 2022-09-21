@@ -1,0 +1,67 @@
+% Copyright (c) 2022 Synrc Research Center
+
+\usepackage[english,russian]{babel}
+\usepackage{fontspec}
+\usepackage{hyphenat}
+\usepackage[top=18mm, bottom=25.4mm,
+            inner=15mm,outer=18mm,
+            paperwidth=142mm, paperheight=200mm]{geometry}
+
+\hyphenation{}
+\fontencoding{T1}
+\addto\captionsrussian{\renewcommand{\contentsname}{Зміст}}
+
+\newcommand{\includeimage}[2]
+{\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{#1}
+\caption{#2}
+\end{figure}
+}
+
+\newcommand*{\titleNENDRO}
+{
+\newfontfamily{\cyrillicfont}{Geometria}
+\setmainfont{Geometria}
+    \begingroup
+        \thispagestyle{empty}
+        \hspace*{0.15\textwidth}
+        \rule{1pt}{\textheight}
+        \hspace*{0.05\textwidth}
+        {
+        \parbox[c][][s]{0.75\textwidth}
+        {
+             \vspace{-15cm}
+            \setmainfont{DDC Uchen}
+             \textsc{\Large  ༄༅༎ །རྫོགས་པ་ཆེན་པོ་ཀློང་ཆེན་སྙིང་ཏིག་\\[0.05\baselineskip]
+                                  གི་སྔོན་འགྲོའི་ངག་འདོན་ཁྲིགས་\\[0.05\baselineskip]
+                                  སུ་བསྡེབས་པ་རྣམ་མཁྱེན་\\[0.05\baselineskip]
+                                  ལམ་བཟང་བྱ་བ་བཞུགས་སོ། \\}
+            \\
+             \textsc{\noindent
+             \setmainfont{Geometria}
+             Додрубчен Джигме Трінлей Озер \\ [0.3\baselineskip]
+             \\
+             \Large
+             Неперевершений шлях \\[0.3\baselineskip]
+             для пізнання зразу всього: \\[0.3\baselineskip]
+             попередні практики \\[0.3\baselineskip]
+             сердечної cутності \\[0.3\baselineskip]
+             обширного простору \\[0.3\baselineskip]
+             остаточного довершення.} \\[0.3\baselineskip]
+        }}
+    \endgroup
+    \setmainfont{Geometria}
+}
+
+\lefthyphenmin=1
+\hyphenpenalty=100
+\tolerance=3000
+
+\newcommand{\ru}{\setmainfont{Geometria}}
+\newcommand{\ti}{\setmainfont{DDC Uchen}}
+
+\newlength\tindent
+\setlength{\tindent}{\parindent}
+\setlength{\parindent}{0pt}
+\renewcommand{\indent}{\hspace*{\tindent}}
