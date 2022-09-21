@@ -3,12 +3,13 @@
 Автор: Максим Сохацький (1980)<br>
 Редактор: Євгенія Сохацька (1944)
 
-* <a href="https://tonpa.guru/stream/2020/2020-07-22%20%D0%A2%D0%BE%D0%BF%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82%201.htm">2020-07-22 Частина #1</a>
-* <a href="https://tonpa.guru/stream/2020/2020-07-23%20%D0%A2%D0%BE%D0%BF%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82%202.htm">2020-07-23 Частина #2</a>
-* <a href="https://tonpa.guru/stream/2020/2020-08-20%20%D0%A2%D0%BE%D0%BF%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82%203.htm">2020-08-20 Частина #3</a>
-* <a href="https://tonpa.guru/stream/2020/2020-12-03%20%D0%A2%D0%BE%D0%BF%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82%204.htm">2020-12-03 Частина #4</a>
-* <a href="https://tonpa.guru/stream/2021/2021-04-30%20%D0%9C%D0%B5%D1%82%D0%B0%D1%84%D0%B8%D0%BB%D0%BE%D1%81%D0%BE%D1%84%D0%B8%D1%8F.htm">2021-04-30 Метафілософія</a>
-* <a href="https://tonpa.guru/stream/2021/2021-09-01%20%D0%A2%D0%BE%D0%BF%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%81%D1%82%205.htm">2021-09-01 Частина #5</a>
+* <a href="https://tonpa.guru/stream/2022/2020-07-22 Топовый программист 1.htm">Поклоніння простору</a><br>
+* <a href="https://tonpa.guru/stream/2022/2020-07-23 Топовый программист 2.htm">Мислення</a><br>
+* <a href="https://tonpa.guru/stream/2022/2020-12-03 Топовый программист 3.htm">Простір професійного розвитку</a><br>
+* <a href="https://tonpa.guru/stream/2022/2021-09-01 Топовый программист 5.htm">Таємні настанови</a><br>
+* <a href="https://tonpa.guru/stream/2022/2021-04-30 Метафилософия.htm">Теоретичні основи</a><br>
+* <a href="https://tonpa.guru/stream/2022/2021-09-01 Топовый программист 6.htm">Практика</a><br>
+* <a href="#">Посвята всім програмістам</a><br>
 
 ISBN: : 978-617-8027-23-0.<br>
 Автор: М.Сохацький. Топовий програміст. 2021.<br>
