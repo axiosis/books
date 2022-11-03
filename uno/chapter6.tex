@@ -1,23 +1,26 @@
 \chapter{Бібліотека вищих мов}
 \epigraph{Присвячується вчителям американської школи формальної філософії та авторам HoTT}{}
-В третьому розділі дається опис гомотопічної мови програмування,
+В п'ятому розділі дається опис гомотопічної мови програмування,
 реалізація якої вперше була представлена CCHM в 2017 році, та для якої написана
 гомотопічна базова бібліотека представлена у цьому та наступному розділах.
 
 \section*{Вступне слово}
+
 
 \section{Інтерналізація теорії типів}
 Кожна мовна імплементація повинна бути протестована. Один з можливих сценаріїв
 тестування типових верифікаторів це пряме вбудовування в модель теорії типів
 виконуючого верифікатора. Так як всі типи в теорії формулюються за допомогою п'яти
 прарвил: формації, інтро, елімінації, обчисленя, рівності), ми зконструювали
-номінальні типи-синоніми для виконуючого верифікатора та довели, що це є реалізацією MLTT.
-Це може розглядатися як універсальний тест для імплементації типового верифікатора,
-позаяк компенсаця інтро правила та правила елімінатора пов'язані в правилі
-обчислення та рівності (бета та ета редукціях). Таким чином, доводжуючи реалізацію MLTT,
+номінальні типи-синоніми для виконуючого верифікатора та довели,
+що це є реалізацією MLTT. Це може розглядатися як універсальний
+тест для імплементації типового верифікатора, позаяк компенсаця
+інтро правила та правила елімінатора пов'язані в правилі обчислення
+та рівності (бета та ета редукціях). Таким чином, доводжуючи реалізацію MLTT,
 ми доводимо властивості самого виконуючого верифікатора.
-MLTT-73 розкладається у спектр $\Pi$, $\Sigma$, та $=$ типів. У цьому розділі ми побудуємо
-мінімальну кубічну систему необхідну для вбудовування MLTT-73 у саму себе.
+MLTT-73 розкладається у спектр $\Pi$, $\Sigma$, та $=$ типів.
+У цьому розділі ми побудуємо мінімальну кубічну систему необхідну
+для вбудовування MLTT-73 у саму себе.
 
 Більш формально, кубічне MLTT вбудовування конструктивно виражає
 J елімінатор типу-рівності та його рівняння — правило обчислення,
@@ -31,12 +34,12 @@ MLTT моделюванню та кубічнії верифікації. Так
 до вбудовування CW-комплексів як зклейок вищих індуктивних типів.
 
 \subsubsection{Теорія типів}
-Any new type in MLTT presented with set of 5 rules: i) formation rules, the signature of type;
-ii) the set of constructors which produce the elements of formation rule signature;
-iii) the dependent eliminator or induction principle for this type;
-iv) the beta-equality or computational rule;
-v) the eta-equality or uniquness principle. $\Pi$, $\Sigma$, and Path
-types will be given shortly. This interpretation or rather way of modeling is MLTT specific.
+Кожен тип в MLTT описується за допомогою пяти правил:
+i) правила формації або сигнатура типу;
+ii) множина конструкторів за допомогою яких рекурсивно будують елементи типу певної сигнатури;
+iii) залежний елімінатор принципу індукції для цього типу;
+iv) бета-рівняння або правило обчислення;
+v) ета-рівняння або принцип унікальності.
 
 \begin{table}
 \centering
@@ -80,7 +83,6 @@ In contexts you can bind to variables (through de Brujin indexes or string names
 i) indexed universes; ii) built-in types; iii) user constructed types, and ask
 questions about type derivability, type checking and code extraction. This system
 defines the core type checker within its language.
-
 
 By using this languages it is possible to encode different interpretations of
 type theory itself and its syntax by construction. Usually the issues will refer to
@@ -1635,3 +1637,4 @@ here\footnote{\url{https://n2o.space/articles/bpe.htm}}.
 and n2o\_async\footnote{\url{https://mqtt.n2o.space/man/n2o_async.htm}} in particular.
 
 \section{Висновки}
+
