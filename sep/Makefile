@@ -1,5 +1,5 @@
 default:
-	(xelatex --interaction nonstopmode erp.tex)
+	(xelatex --interaction nonstopmode sep.tex)
 	return 0
 
 clean:
