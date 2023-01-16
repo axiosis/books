@@ -445,9 +445,8 @@ O_{HTS} = O_{\Pi\Sigma=WI} : O_\Pi \rightarrow O_\Sigma \rightarrow O_= \rightar
        $O_W$                           & Числення (ко-)індуктивних конструкцій W та M дерев MLTT-80 (матіндукція) \\
     \rowcolor{LightGray}
        $O_{I}$                         & Гомотопічна система типів CCHM (формальна математика) \\
-    \rowcolor{LightGray}
-       $O_{\triangleright}$            & Кубічна система с обмежувальною рекурсією (теореми про \pi-числення)\\
       \hline
+       $O_{\triangleright}$            & Кубічна система с обмежувальною рекурсією (теореми про $\pi$-числення)\\
        $O_{/}$                         & Система фактор-типів (Lean) \\
        $O_{H}$                         & Мова з оператором Адамара (квантова фізика)\\
        $O_{\dashv}$                    & Модальна HoTT (фізика)\\
@@ -765,6 +764,26 @@ data MLTT-80
    | 1 (_: Unit MLTT-80)
    | 2 (_: Bool MLTT-80)
    | W (_: W MLTT-80)
+
+data W (lang: U) =
+   | W_Form (n: name) (a b: lang)
+   | W_Sup (a b: lang)
+   | W_Ind (a b c: lang)
+
+data 2 (lang: U) =
+   | 2_bool
+   | 2_true
+   | 2_false
+   | 2_Ind (a: lang)
+
+data 1 (lang: U) =
+   | 1_unit
+   | 1_star
+   | 1_Ind (a: lang)
+
+data 0 (lang: U) =
+   | 0_Ind (a: lang)
+
 \end{lstlisting}
 \end{definition}
 
