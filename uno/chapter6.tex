@@ -6,7 +6,6 @@
 
 \section*{Вступне слово}
 
-
 \section{Інтерналізація теорії типів}
 Кожна мовна імплементація повинна бути протестована. Один з можливих сценаріїв
 тестування типових верифікаторів це пряме вбудовування в модель теорії типів
@@ -35,48 +34,54 @@ MLTT моделюванню та кубічнії верифікації. Так
 
 \subsubsection{Теорія типів}
 Кожен тип в MLTT описується за допомогою пяти правил:
-i) правила формації або сигнатура типу;
-ii) множина конструкторів за допомогою яких рекурсивно будують елементи типу певної сигнатури;
-iii) залежний елімінатор принципу індукції для цього типу;
-iv) бета-рівняння або правило обчислення;
-v) ета-рівняння або принцип унікальності.
+1) правила формації або сигнатура типу;
+2) множина конструкторів за допомогою яких рекурсивно будують елементи типу певної сигнатури;
+3) залежний елімінатор принципу індукції для цього типу;
+4) бета-рівняння або правило обчислення;
+5) ета-рівняння або принцип унікальності.
 
 \begin{table}
 \centering
   \caption{Interpretations correspond to mathematical theories}
  \begin{tabular}{lcccc}
     \hline
-       \textbf{Теорія типів} & \textbf{Logic} & \textbf{Category Theory} & \textbf{Homotopy Theory} \\
+       \textbf{Теорія типів} & \textbf{Логіка} & \textbf{Теорія категорій} & \textbf{Теорія гомотопій} \\
     \hline
-       A type & class & object & space \\
-       isProp A & proposition & (-1)-truncated object & space \\
-       a:A program & proof & generalized element & point \\
-       $B(x)$ & predicate & indexed object & fibration \\
-       $b(x) : B(x)$ & conditional proof & indexed elements & section\\
-       $\emptyset$ & $\bot$ false & terminal object & empty space \\
-       $\mathbf{1}$ & $\top$ true & initial object & singleton \\
-       $A + B$ & $A\vee B$ disjunction & coproduct & coproduct space \\
-       $A\times B$ & $A\wedge B$ conjunction & product & product space \\
-       $A\to B$ & $A\Rightarrow B$ & internal hom & function space \\
-       $\sum{x:A},B(x)$ & $\exists_{x:A}B(x)$ & dependent sum & total space \\
-       $\prod{x:A},B(x)$ & $\forall_{x:A}B(x)$ & dependent product & space of sections\\
-       $\mathbf{Path}_{A}$ & equivalence $=_A$ & path space object & path space $A^I$ \\
-       quotient & equivalence class & quotient & quotient \\
-       W-type & induction & colimit & complex\\
-       type of types & universe & object classifier & universe \\
-       quantum circuit & proof net & string diagram & \\
+       A тип & клас & обʼєкт & простір \\
+       isProp A & твердження & (-1)-обрізаний обʼєкт & простір \\
+       a:A програма & доведення & узагальнений елемени & точка \\
+       $B(x)$ & предикат & індексований обʼєкт & розшарування \\
+       $b(x) : B(x)$ & умовне доведення & індексовані елементи & секції\\
+       $\emptyset$ & $\bot$ неправда & термінальний обʼєкт & пустий простір \\
+       $\mathbf{1}$ & $\top$ істина & ініціальний обʼєкт & сінглтон \\
+       $A + B$ & $A\vee B$ дізʼюнкція & кодобуток & простір копродуктів \\
+       $A\times B$ & $A\wedge B$ конʼюнкція & добуток & простір продуктів \\
+       $A\to B$ & $A\Rightarrow B$ & внутрішній гомоморфізм & простір функції \\
+       $\sum{x:A},B(x)$ & $\exists_{x:A}B(x)$ & залежна сума & повний простір \\
+       $\prod{x:A},B(x)$ & $\forall_{x:A}B(x)$ & залежний добуток & простір секцій\\
+       $\mathbf{Path}_{A}$ & еквівалентність $=_A$ & обʼєкт типу шляхів & тип шляхів $A^I$ \\
+       факторизація & клас еквівалентності & фактор & фактор \\
+       W-тип & induction & коліміт & комплекс\\
+       тип типів & всесвіт & класифікаторо обʼєктів & всесвіт \\
+       квантова схема & граф доведення & струнна діаграма & \\
       \hline
   \end{tabular}
 \end{table}
 
-The most interesting are Id types. Id types were added in \footnote{P. Martin-Löf, G. Sambin. Intuitionistic type theory. 1984.}{1984} while original MLTT was introduced in \footnote{P. Martin-Löf, G. Sambin. The Theory of Types. 1972.}{1972}.
-Predicative Universe Hierarchy was added in \footnote{P. Martin-Löf. An intuitionistic theory of types: predicative part. 1975.}{1975}.
-While original MLTT contains Id types that preserve uniquness of identity
-proofs (UIP) or eta-rule of Id type, HoTT refutes UIP (eta rule desn't hold)
-and introduces univalent heterogeneous Path equality (\footnote{M. Hofmann, T. Streicher. The groupoid interpretation of type theory. 1996.}{$\infty$-Groupoid interpretation}).
-Path types are essential to prove computation and uniquness rules for all types
-(needed for building signature and terms), so we will be able to prove all
-the MLTT rules as a whole.
+Найбільш цікаві --- Id типи, які були додані в теорію типів в 1984 році
+\footnote{P. Martin-Löf, G. Sambin. Intuitionistic type theory. 1984.}{1984}
+у той час як оригінальна теорія була представлена
+\footnote{P. Martin-Löf, G. Sambin. The Theory of Types. 1972.}{1972} в 1972 році.
+Предикативна ієрархія всесвітів була додана \footnote{P. Martin-Löf. An intuitionistic theory of types: predicative part. 1975.}{1975} в 1975.
+
+MLTT з Id типами зберігає властивість стягуваного простору усіх доведень (uniquness of identity
+proofs, UIP), або ета-правило Id типа, але HoTT відхиляє UIP --- ета правило
+не виконується, а натомість вводиться простір шляхів --- Path
+тип\footnote{M. Hofmann, T. Streicher. The groupoid interpretation of type theory. 1996.}{$\infty$-Groupoid interpretation}.
+
+Простори шляхів є ключовими для доведення властивостей обчислюваності
+та унікальності (бета та ета правил). Також в цій роботі ми покажемо
+мінімальну систему де можна довести всі всластивості MLTT теорії типів.
 
 \subsubsection{Інтерпретації}
 In contexts you can bind to variables (through de Brujin indexes or string names):
