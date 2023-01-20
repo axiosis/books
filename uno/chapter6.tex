@@ -1,6 +1,6 @@
 \chapter{Бібліотека вищих мов}
 \epigraph{Присвячується вчителям американської школи формальної філософії та авторам HoTT}{}
-В п'ятому розділі дається опис гомотопічної мови програмування,
+У попередньому п'ятому розділі дається опис гомотопічної мови програмування,
 реалізація якої вперше була представлена CCHM в 2017 році, та для якої написана
 гомотопічна базова бібліотека представлена у цьому та наступному розділах.
 
@@ -10,7 +10,7 @@
 Кожна мовна імплементація повинна бути протестована. Один з можливих сценаріїв
 тестування типових верифікаторів це пряме вбудовування в модель теорії типів
 виконуючого верифікатора. Так як всі типи в теорії формулюються за допомогою п'яти
-прарвил: формації, інтро, елімінації, обчисленя, рівності), ми зконструювали
+правил: формації, інтро, елімінації, обчисленя, рівності; ми зконструювали
 номінальні типи-синоніми для виконуючого верифікатора та довели,
 що це є реалізацією MLTT. Це може розглядатися як універсальний
 тест для імплементації типового верифікатора, позаяк компенсаця
@@ -25,7 +25,7 @@ MLTT-73 розкладається у спектр $\Pi$, $\Sigma$, та $=$ т�
 J елімінатор типу-рівності та його рівняння — правило обчислення,
 що було неможливо до кубічної інтерпретації. Також цей розділ
 відкриває серію параграфів присвячених формалізації основ математики у кубічній теорії типів,
-MLTT моделюванню та кубічнії верифікації. Так як не всі можуть бути знайомі з теорією типів,
+MLTT моделюванню та кубічної верифікації. Так як не всі можуть бути знайомі з теорією типів,
 цей розділ також містить їх інтерпретації з точки зору різних розділів математики.
 
 Додамо, що це тільки вхід в техніку прямого вбудовування і після MLTT моделювання,
@@ -54,26 +54,26 @@ MLTT моделюванню та кубічнії верифікації. Так
        $b(x) : B(x)$ & умовне доведення & індексовані елементи & секції\\
        $\emptyset$ & $\bot$ неправда & термінальний об'єкт & пустий простір \\
        $\mathbf{1}$ & $\top$ істина & ініціальний об'єкт & сінглтон \\
-       $A + B$ & $A\vee B$ діз'юнкція & кодобуток & простір копродуктів \\
-       $A\times B$ & $A\wedge B$ кон'юнкція & добуток & простір продуктів \\
-       $A\to B$ & $A\Rightarrow B$ & внутрішній гомоморфізм & простір функції \\
+       $A + B$ & $A\vee B$ діз'юнкція & кодобуток & простір кодобутків \\
+       $A\times B$ & $A\wedge B$ кон'юнкція & добуток & простір добутків \\
+       $A\to B$ & $A\Rightarrow B$ & внутрішній Hom & простір функції \\
        $\sum{x:A},B(x)$ & $\exists_{x:A}B(x)$ & залежна сума & повний простір \\
        $\prod{x:A},B(x)$ & $\forall_{x:A}B(x)$ & залежний добуток & простір секцій\\
        $\mathbf{Path}_{A}$ & еквівалентність $=_A$ & об'єкт типу шляхів & тип шляхів $A^I$ \\
-       факторизація & клас еквівалентності & фактор & фактор \\
+       факторизація & клас еквівалентн. & фактор & фактор \\
        W-тип & індукція & коліміт & комплекс\\
-       тип типів & всесвіт & класифікаторо обʼєктів & всесвіт \\
+       тип типів & всесвіт & класифікаторо об'єктів & всесвіт \\
        квантова схема & граф доведення & струнна діаграма & \\
       \hline
   \end{tabular}
 \end{table}
 
 Найбільш цікаві --- Id типи, які були додані в теорію типів в 1984 році
-\footnote{P. Martin-Löf, G. Sambin. Intuitionistic type theory. 1984.}{1984}
+\footnote{P. Martin-Löf, G. Sambin. Intuitionistic type theory. 1984.}
 у той час як оригінальна теорія була представлена
-\footnote{P. Martin-Löf, G. Sambin. The Theory of Types. 1972.}{1972} в 1972 році.
+\footnote{P. Martin-Löf, G. Sambin. The Theory of Types. 1972.} в 1972 році.
 Предикативна ієрархія всесвітів була додана \footnote{P. Martin-Löf. An
-intuitionistic theory of types: predicative part. 1975.}{1975} в 1975.
+intuitionistic theory of types: predicative part. 1975.} в 1975.
 
 MLTT з Id типами зберігає властивість стягуваного простору усіх
 доведень (uniquness of identity proofs, UIP), або ета-правило Id типа,
@@ -86,7 +86,7 @@ The groupoid interpretation of type theory. 1996.} --- так
 та унікальності (бета та ета правил). Також в цій роботі ми покажемо
 мінімальну систему де можна довести всі всластивості MLTT теорії типів.
 
-\subsubsection{Інтерпретації теорії типів}
+\subsection{Інтерпретації теорії типів}
 Використовуючи теорію типів як мову, можливо закодувати на ній як
 різні математичні теорії, так і використовувати ці математичні
 теорії як взаємозамінювані фундаменти математики.
@@ -96,42 +96,59 @@ The groupoid interpretation of type theory. 1996.} --- так
 Тут ми будемо говорити про наступні інтерпретації:
 1) теоертико-типову;
 2) категоріальну;
-3) теоретико-множинна;
-4) гомотопічна;
-5) фібраційна або геометрична.
+3) теоретико-множинну;
+4) гомотопічну;
+5) фібраційну або геометричну.
 
-\subsubsection*{Логічна або теоретико-типова інтерпретація}
-According to type theoretical interpretation for any type should be provided 5 formal
-inference rules: i) formation; ii) introduction; iii) dependent elimination principle;
-iv) beta rule or computational rule; v) eta rule or uniqueness rule. The last one could
-be exceptional for Path types. The formal representation of all rules of MLTT
-are given according to type-theoretical interpretation as a final result in this Issue I.
-It was proven that classical Logic could be embedded into
-intuitionistic propositional logic (IPL) which is directly embedded into MLTT.
+Реалізовуючи компаративістику інтерпретацій розглянемо на прикладах
+перші та основні типи теоретико-типової MLTT системи ($\Pi$, $\Sigma$, $Id$) зразу
+з точки зору декількох інтерпретацій:
+1) логічної або осучасненої теоретико-типової інтерпретації, похідних системах від MLTT;
+2) категоріальної або топосо-теоретичної фібраційної геометричної інтерпретації;
+3) гомотопічної або кубічної інтерпретації.
 
-Logical and type-theoretical interpretations could be distincted. Also
-set-theoretical interpretation is not presented in Table 1.
+\subsubsection{Теоретико-множинна інтерпертація}
+Теоретико-множинна інтерпретація не зображена в таблиці 6.1, тому
+що є домінуючою робочою інтерпретацією фундамента сучасної математики.
 
-\subsubsection*{Категоріальна або топосо-теоритична інтерпретація}
-Categorical interpretation is a modeling through categories and functors.
-First category is defined as objects, morphisms and their properties, then
-we define functors, etc. In particular, as an example, according to categorical
-interpretation $\Pi$ and $\Sigma$ types of MLTT are presented as adjoint
-functors, and forms itself a locally closed cartesian category, which will be given a
-intermediate result in \textbf{Issue VII: Topos Theory}. In some sense we include here
-topos-theoretical interpretations, with presheaf model of type theory as
-example (in this case fibrations are constructes as functors, categorically).
-
-\subsubsection*{Теоретико-типова інтерпертація}
 Теортико-множинна інтерпретація може замістити логіку перших порядків, але не може
 безпосередньо оперувати вищими рівностями. Індуктивні типи в терію множин повинні
-вбудовуватися додаткоого, а саме визначення множини моделюється в гомотопічній
+вбудовуватися додатково, а саме визначення множини моделюється в гомотопічній
 теорії як n-тип. Наявність принципу унікальності
-доведень рівності (UIP) в типовій системі означає теоретико-множинну інтерпретацію.
+доведень рівності (UIP) в типовій системі вже означає теоретико-множинну інтерпретацію.
 Не зважаючи на це теореми теорії множин без зусиль вбудовуються
 в будь-яку з інтерпретації.
 
-\subsubsection*{Гомотопічна інтерпретація}
+\subsubsection{Логічна або теоретико-типова інтерпретація}
+Виходячи з засад MLTT теорії типів, кожен тип або сигнатура визначається
+п'ятьома правилами:
+1) формації або типової сигнатури;
+2) представлення або інтро-правила;
+3) елімінації або загальний принцип залежної індукції;
+4) правила обчислення або бета-правила;
+5) принципу унікальності або ета-правила.
+
+Формальна репрезентація всіх правила MLTT теорії буде надана в кінці цього розділу.
+Є загальновідомим той факт, що класичні логіки можуть бути вбудовані в інтуіціоністичну
+пропозиційну логіку (intuitionistic propositional logic, IPL), яка безпосередньо
+вбудована та є природнім (інтуіціоністичним) продовженням MLTT.
+
+Хоча класично-логічна інтерпретація відрізняється від модернової теоретико-типової
+інтерпретації, вони можуть бути об'єднані як загальні логічні, тому що всі є
+формами механізовуваних мов програмування.
+
+\subsubsection{Категоріальна або топосо-теоритична інтерпретація}
+Категоріальна інтерпретація розповідає про теорію типів як внутрішню мову
+декартово-замкнених категорій та їх функторів. Головним результатом
+категорної інтерпретації можна назвати спряженість функторів $\Pi$ та $\Sigma$,
+які є носіями відповідних MLTT типів та формують собою локальну
+декартово-замкнену категорію, яка буде надана у розділі 7.
+
+Топосо-теоретична інтерпретація з досніповими моделями теорії типів Кокана,
+де фібрації конструюються як функтори, є сучасним математичним апаратом
+аналізу не тільки залежних але і кубічних теорій.
+
+\subsubsection{Гомотопічна інтерпретація}
 In classical MLTT uniquness rule of Id type do holds strictly. In Homotopical
 interpretation of MLTT we need to allow a path space as Path type where uniqueness
 rule doesn't hold. Groupoid interpretation of Path equality that doesn't hold UIP generally
@@ -143,7 +160,7 @@ of fiber bundles and trivial fiber bindle as direct isomorphisms of $\Pi$ types 
 given here as theorem. As fibrations study in homotopical interpretation, geometric
 interpretation could be treated as homotopical.
 
-\subsection{Типи $\Pi$, $\Sigma$, Path}
+\subsection{Типи Π, Σ, Path}
 
 \subsubsection{$\Pi$-тип}
 $\Pi$ is a dependent product type, the generalization of functions.
@@ -160,17 +177,17 @@ that forms a ground of type theory; ii) geomeric intepretation of $\Pi$ as fiber
 iii) categorical interpretation of functions as functors.
 
 \subsubsection*{Теоретико-типова інтерпретація}
-As a logical system dependent type theory could correspond to higher order logic.
-However here only type-theoretical model is given completely.
+Як логічна система теорія залежних типів відповідає логіці вищих порядків,
+одна тут даються виключно правила теоретико-типової MLTT інтерпретації.
 
-\begin{definition} ($\Pi$-Formation).
+\begin{definition} ($\Pi$-Формація).
 $$(x: A) \rightarrow B(x) =_{def} \prod_{x:A}B(x) : U.$$
 \begin{lstlisting}
 Pi (A: U) (B: A -> U): U = (x: A) -> B x
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} ($\Pi$-Introduction).
+\begin{definition} ($\Pi$-Представлення).
 $$\backslash (x: A) \rightarrow b(x) =_{def} \prod_{A:U}\prod_{B:A \rightarrow U}\prod_{b:\prod_{a:A}B(a)}\lambda x.b(x) : \prod_{y:A}B(y).$$
 \begin{lstlisting}
 lambda (A B: U) (b: B): A -> B = \(x: A) -> b
@@ -178,7 +195,7 @@ lam (A: U) (B: A -> U) (b: (a: A) -> B a): Pi A B = \(x: A) -> b x
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} ($\Pi$-Elimination).
+\begin{definition} ($\Pi$-Елімінація).
 $$f\ a =_{def} \prod_{A:U}\prod_{B: A \rightarrow U}\prod_{a:A}\prod_{f: \prod_{x:A}B(a)}f(a) : B(a).$$
 \begin{lstlisting}
 apply (A B: U) (f: A -> B) (a: A) : B = f a
@@ -186,7 +203,8 @@ app (A: U) (B: A -> U) (a: A) (f: Pi A B): B a = f a
 \end{lstlisting}
 \end{definition}
 
-\begin{theorem} ($\Pi$-Computation).
+\newpage
+\begin{theorem} ($\Pi$-Обчислюваність).
 $$f(a) =_{B(a)} (\lambda (x:A) \rightarrow f(a))(a).$$
 \begin{lstlisting}
 Beta (A:U) (B:A->U) (a: A) (f: Pi A B)
@@ -194,7 +212,7 @@ Beta (A:U) (B:A->U) (a: A) (f: Pi A B)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} ($\Pi$-Uniqueness).
+\begin{theorem} ($\Pi$-Унікальність).
 $$f =_{(x:A)\rightarrow B(a)} (\lambda (y:A) \rightarrow f(y)).$$
 \begin{lstlisting}
 Eta (A:U) (B:A->U) (a:A) (f: Pi A B)
@@ -206,26 +224,26 @@ Eta (A:U) (B:A->U) (a:A) (f: Pi A B)
 The adjoints $\Pi$ and $\Sigma$ is not the only adjoints could be presented in type system.
 Axiomatic cohesions could contain a set of adjoint pairs as a core type checker operations.
 
-\begin{definition} (Dependent Product).
+\begin{definition} (Залежний добуток).
 The dependent product along morphism $g: B \rightarrow A$ in category $C$ is the right
 adjoint $\Pi_g : C_{/B} \rightarrow C_{/A}$ of the base change functor.
 \end{definition}
 
-\begin{definition} (Space of Sections).
+\begin{definition} (Простір шарів розшарувань).
 Let $\mathbf{H}$ be a $(\infty,1)$-topos, and let $E \rightarrow B : \mathbf{H}_{/B}$ a bundle in
 $\mathbf{H}$, object in the slice topos. Then the space of sections $\Gamma_\Sigma(E)$
 of this bundle is the Dependent Product:
 $$ \Gamma_\Sigma(E) = \Pi_\Sigma (E) \in \mathbf{H}. $$
 \end{definition}
 
-\begin{theorem} (HomSet).
+\begin{theorem} (Множина морфізмів).
 If codomain is set then space of sections is a set.
 \begin{lstlisting}
 setFun (A B : U) (_: isSet B) : isSet (A -> B)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} (Contractability).
+\begin{theorem} (Стягуваність).
 If domain and codomain is contractible then the space of sections is contractible.
 \begin{lstlisting}
 piIsContr (A: U) (B: A -> U) (u: isContr A)
@@ -233,7 +251,7 @@ piIsContr (A: U) (B: A -> U) (u: isContr A)
 \end{lstlisting}
 \end{theorem}
 
-\begin{definition} (Section).
+\begin{definition} (Шар розшарування).
 A section of morphism $f: A \rightarrow B$ in some category is the morphism $g: B \rightarrow A$
 such that $f \circ g: B \mapright{g} A \mapright{f} B$ equals the identity morphism on B.
 \end{definition}
@@ -243,11 +261,11 @@ Geometrically, $\Pi$ type is a space of sections, while the dependent codomain i
 Lambda functions are sections or points in these spaces, while the function result is a fibration.
 $\Pi$ type also represents the cartesian family of sets, generalizing the cartesian product of sets.
 
-\begin{definition} (Fiber).
+\begin{definition} (Розшарування).
 The fiber of the map $p: E \rightarrow B$ in a point $y: B$ is all points $x: E$ such that $p(x)=y$.
 \end{definition}
 
-\begin{definition} (Fiber Bundle).
+\begin{definition} (Пучок розрашувань).
 The fiber bundle $ F \rightarrow E \mapright{p} B$ on a total space $E$ with fiber layer $F$ and base $B$ is a
 structure $(F,E,p,B)$ where $p: E \rightarrow B$ is a surjective map with following property:
 for any point $y: B$ exists a neighborhood $U_b$ for which a homeomorphism $f: p^{-1}(U_b) \rightarrow U_b \times F$
@@ -266,7 +284,7 @@ making the following diagram commute.
 \end{center}
 \end{definition}
 
-\begin{definition} (Cartesian Product of Family over B).
+\begin{definition} (Декартовий добуток сімейства над B).
 Is a set $F$ of sections of the bundle with elimination map $app : F \times B \rightarrow E$ such that
 \begin{equation}
 F \times B \mapright{app} E \mapright{pr_1} B
@@ -278,7 +296,7 @@ unique map $A \rightarrow F$ such that everything commute. So a category
 with all dependent products is necessarily a category with all pullbacks.
 \end{definition}
 
-\begin{definition} (Trivial Fiber Bundle).
+\begin{definition} (Тривіальний пучок розшарувань).
 When total space $E$ is cartesian product $\Sigma(B,F)$ and $p = pr_1$
 then such bundle is called trivial $(F,\Sigma(B,F),pr_1,B)$.
 \end{definition}
@@ -291,7 +309,7 @@ $cong$ function). This property behaves functoriality
 as if paths are groupoid morphisms and types are objects.
 \end{theorem}
 
-\begin{theorem} (Trivial Fiber equals Family of Sets).
+\begin{theorem} (Тривіальний пучок розшарувань дорівнює сімейству множин).
 Inverse image (fiber) of fiber bundle $(F,B*F,pr_1,B)$ in point $y:B$ equals $F(y)$.
 \begin{lstlisting}
 FiberPi (B: U) (F: B -> U) (y: B)
@@ -299,7 +317,7 @@ FiberPi (B: U) (F: B -> U) (y: B)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} (Homotopy Equivalence).
+\begin{theorem} (Гомотопічна еквівалентність).
 If fiber space is set for all base, and
 there are two functions $f,g : (x:A) \rightarrow B(x)$ and two
 homotopies between them, then these homotopies are equal.
@@ -309,10 +327,6 @@ setPi (A: U) (B: A -> U) (h: (x: A) -> isSet (B x)) (f g: Pi A B)
 \end{lstlisting}
 \end{theorem}
 
-Note that we will not be able to prove this theorem
-until \textbf{Issue III: Homotopy Type Theory} because
-bi-invertible iso type will be announced there.
-
 \subsubsection{$\Sigma$-тип}
 $\Sigma$ is a dependent sum type, the generalization of products.
 $\Sigma$ type is a total space of fibration. Element of total
@@ -320,19 +334,19 @@ space is formed as a pair of basepoint and fibration.
 
 \subsubsection{Теоретико-типов інтерпретація}
 
-\begin{definition} ($\Sigma$-Formation).
+\begin{definition} ($\Sigma$-Формація).
 \begin{lstlisting}
 Sigma (A : U) (B : A -> U) : U = (x : A) * B x
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} ($\Sigma$-Introduction).
+\begin{definition} ($\Sigma$-Предствалення).
 \begin{lstlisting}
 dpair (A: U) (B: A -> U) (a: A) (b: B a) : Sigma A B = (a,b)
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} ($\Sigma$-Elimination).
+\begin{definition} ($\Sigma$-Елімінація).
 \begin{lstlisting}
 pr1 (A: U) (B: A -> U)
     (x: Sigma A B): A = x.1
@@ -346,7 +360,7 @@ sigInd (A: U) (B: A -> U) (C: Sigma A B -> U)
 \end{lstlisting}
 \end{definition}
 
-\begin{theorem} ($\Sigma$-Computation).
+\begin{theorem} ($\Sigma$-Обчислюваність).
 \begin{lstlisting}
 Beta1 (A: U) (B: A -> U)
       (a:A) (b: B a)
@@ -358,7 +372,7 @@ Beta2 (A: U) (B: A -> U)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} ($\Sigma$-Uniqueness).
+\begin{theorem} ($\Sigma$-Унікальність).
 \begin{lstlisting}
 Eta2 (A: U) (B: A -> U) (p: Sigma A B)
    : Equ (Sigma A B) p (pr1 A B p,pr2 A B p)
@@ -367,14 +381,14 @@ Eta2 (A: U) (B: A -> U) (p: Sigma A B)
 
 \subsubsection{Категоріальна інтерпретація}
 
-\begin{definition} (Dependent Sum).
+\begin{definition} (Залежна сума).
 The dependent sum along the morphism $f: A \rightarrow B$ in category $C$ is the left
 adjoint $\Sigma_f : C_{/A} \rightarrow C_{/B}$ of the base change functor.
 \end{definition}
 
 \subsubsection{Теоретико-множинна інтерпретація}
 
-\begin{theorem} (Axiom of Choice).
+\begin{theorem} (Аксіома вибору).
 If for all $x : A$ there is $y : B$ such that $R(x,y)$,
 then there is a function $f : A \rightarrow B$
 such that for all $x : A$ there is a witness of $R(x,f(x))$.
@@ -384,7 +398,7 @@ ac (A B: U) (R: A -> B -> U)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} (Total).
+\begin{theorem} (Повний простір).
 If fiber over base implies another fiber
 over the same base then we can construct total space of section
 over that base with another fiber.
@@ -395,14 +409,14 @@ total (A:U) (B C: A -> U)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} ($\Sigma$-Contractability). If the fiber is set then the $\Sigma$ is set.
+\begin{theorem} ($\Sigma$-Стягуваність). If the fiber is set then the $\Sigma$ is set.
 \begin{lstlisting}
 setSig (A:U) (B: A -> U) (sA: isSet A)
        (sB : (x:A) -> isSet (B x)) : isSet (Sigma A B)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} (Path Between Sigmas).
+\begin{theorem} (Шлях між сімами).
 Path between two sigmas $t,u: \Sigma(A,B)$ could be decomposed to
 sigma of two paths $p:t_1=_{A}u_1)$ and $(t_2=_{B(p@i)}u_2)$.
 \begin{lstlisting}
@@ -413,7 +427,6 @@ pathSig (A:U) (B : A -> U) (t u : Sigma A B)
 \end{theorem}
 
 \subsubsection{Path-тип}
-
 The Path identity type defines a Path space with elements and values.
 Elements of that space are functions from interval $[0,1]$ to a values of that path space.
 This ctt file reflects \footnote{Cyril Cohen, Thierry Coquand, Simon Huber, Anders M{\"{o}}rtberg. Cubical Type Theory: a constructive interpretation of the univalence axiom. 2015. \url{https://5ht.co/cubicaltt.pdf}}{CCHM} cubicaltt model with connections.
@@ -425,14 +438,14 @@ There is a \footnote{Andrew Pitts, Ian Orton. Axioms for Modelling Cubical Type 
 
 \subsubsection{Кубічна інтерпретація}
 
-\begin{definition} (Path Formation).
+\begin{definition} (Path-Формація).
 \begin{lstlisting}
 Hetero (A B: U) (a: A) (b: B) (P: Path U A B) : U = PathP P a b
 Path (A: U) (a b: A) : U = PathP (<i> A) a b
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} (Path Reflexivity).
+\begin{definition} (Path-рефлексивність).
 Returns an element of reflexivity path space for a given value of the type.
 The inhabitant of that path space is the lambda on the homotopy
 interval $[0,1]$ that returns a constant value a. Written in
@@ -442,7 +455,7 @@ refl (A: U) (a: A) : Path A a a
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} (Path Application).
+\begin{definition} (Path-аплікація).
 You can apply face to path.
 \begin{lstlisting}
 app1 (A: U) (a b: A) (p: Path A a b): A = p @ 0
@@ -450,7 +463,7 @@ app2 (A: U) (a b: A) (p: Path A a b): A = p @ 1
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} (Path Composition).
+\begin{definition} (Path-композиція).
 Composition operation allows to build a new path by given to paths
 in a connected point.
 \begin{center}
@@ -473,13 +486,13 @@ composition (A: U) (a b c: A) (p: Path A a b) (q: Path A b c)
 \end{lstlisting}
 \end{definition}
 
-\begin{theorem} (Path Inversion).
+\begin{theorem} (Path-інверсія).
 \begin{lstlisting}
 inv (A: U) (a b: A) (p: Path A a b): Path A b a = <i> p @ -i
 \end{lstlisting}
 \end{theorem}
 
-\begin{definition} (Connections).
+\begin{definition} (Path-з'єднання).
 Connections allows you to build square
 with given only one element of path: i) $\lambda\ (i,j: I) \rightarrow p\ @\ min(i,j)$;
 ii) $\lambda\ (i,j:I) \rightarrow p\ @\ max(i,j)$.
@@ -520,7 +533,7 @@ connection2 (A: U) (a b: A) (p: Path A a b)
 \end{lstlisting}
 \end{definition}
 
-\begin{theorem} (Congruence).
+\begin{theorem} (Конгруентність).
 Is a map between values of one type
 to path space of another type by an encode function between types.
 Implemented as lambda defined on $[0,1]$ that returns
@@ -538,7 +551,7 @@ apd (A: U) (a x:A) (B: A -> U) (f: A -> B a)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} (Transport).
+\begin{theorem} (Транспорт).
 Transports a value of the domain type to the value of the codomain type
 by a given path element of the path space between domain and codomain types.
 Defined as path composition with |[]| of a over a path $p$ --- |comp p a []|.
@@ -549,19 +562,19 @@ trans (A B: U) (p: Path U A B) (a: A) : B
 
 \subsubsection{Теоретико-типова інтерпретація}
 
-\begin{definition} (Singleton).
+\begin{definition} (Сінглтон).
 \begin{lstlisting}
 singl (A: U) (a: A): U = (x: A) * Path A a x
 \end{lstlisting}
 \end{definition}
 
-\begin{theorem} (Singleton Instance).
+\begin{theorem} (Інстанс сінглтона).
 \begin{lstlisting}
 eta (A: U) (a: A): singl A a = (a,refl A a)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} (Singleton Contractability).
+\begin{theorem} (Стягуваність сінглтона).
 \begin{lstlisting}
 contr (A: U) (a b: A) (p: Path A a b)
   : Path (singl A a) (eta A a) (b,p)
@@ -717,7 +730,6 @@ $$
 $$
 \end{definition}
 
-\newpage
 \subsection{Інтерналізація}
 
 Here is given formal model of type-theoretical interpretation of Martin-Löf Type Theory.
