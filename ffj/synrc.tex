@@ -1,9 +1,34 @@
 % Copyright (c) 2022 Synrc Research Center
 
+\usepackage[osf]{mathpazo}
+\usepackage{musicography}
+\usepackage{microtype}
+\usepackage{stmaryrd}
+\usepackage{color,colortbl}
+\usepackage{epigraph}
+\usepackage[mathcal,mathbf]{euler}
+\usepackage{amsmath,amssymb,amsthm,wasysym}
+\usepackage{graphicx,sidecap,tikz}
+\usepackage{fullwidth}
+\usepackage[T1]{fontspec}
+\usepackage{hyphenat}
+\usepackage{ifthen}
+\usepackage{tikz-cd}
+\usepackage[english,russian]{babel}
+\usepackage{tabstackengine}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{moreverb}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{newunicodechar}
+
 \usepackage[english,russian]{babel}
 \usepackage{xeCJK}
 \usepackage{fontspec}
 \usepackage{graphicx,changepage,txfonts}
+\usepackage{listings}
 \usepackage{newunicodechar}
 \usepackage{amsmath}
 \usepackage{hyphenat}
@@ -47,13 +72,24 @@
              Максим Сохацький \\ [0.3\baselineskip]
              \\
              \Large
-             Журнал «Формальна філософія» \\[0.5\baselineskip]
+             Формальна філософія \\[0.5\baselineskip]
              \\
              \small
-             Вступ у формальну філософію 1-7 \\
-             Конференції 1-2 \\
-             Бібліотека 1-2 \\
-             Формальна Йогачара 1-7 \\
+             Свідомість \\
+             Розшарування Хопфа \\
+             Формалізація буддизму \\
+             Хроматична теорія гомотопій \\
+             Геометрія в модальній HoTT \\
+             Lean конференція \\
+             Категорії Квілена \\
+             Модальна гомотопічна теорія \\
+             Метафілософія \\
+             Прикладна математика \\
+             Формальна система \\
+             Мова простору \\
+             Бібліотека Групоїд Інфініті \\
+             Топовий програміст \\
+             Формальна Йогачара \\
              }
         }}
     \endgroup
@@ -64,10 +100,24 @@
 \hyphenpenalty=100
 \tolerance=3000
 
-\newcommand{\ru}{\setmainfont{Geometria}}
-\newcommand{\ti}{\setmainfont{DDC Uchen}}
+\fontencoding{T1}
+\newfontfamily{\cyrillicfont}{Geometria}
+\setmainfont{Geometria}
+
+\usetikzlibrary{matrix}
+\usetikzlibrary{babel}
+
+\usetikzlibrary{arrows,positioning,decorations.pathmorphing,trees}
+
+\addto\captionsrussian{\renewcommand{\contentsname}{Зміст}}
+\addto\captionsrussian{\renewcommand{\bibname}{Список використаних джерел}}
+\addto\captionsrussian{\renewcommand{\chaptername}{Розділ}}
+\addto\captionsrussian{\renewcommand{\tablename}{Таблиця}}
 
 \newlength\tindent
 %\setlength{\tindent}{\parindent}
 %\setlength{\parindent}{0pt}
 \renewcommand{\indent}{\hspace*{\tindent}}
+
+\def\lstlanguagefiles{syntax.tex}
+\lstset{language=infinity}

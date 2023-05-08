@@ -2,7 +2,6 @@ default:
 	(xelatex --interaction nonstopmode ffj.tex)
 
 clean:
-	rm -f index.pdf
 	rm -f *.toc
 	rm -f *.htoc
 	rm -f *.aux
