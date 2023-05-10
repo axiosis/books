@@ -79,15 +79,6 @@ $\Box\ :\ \star$. Фактично, усі типизовані мови про�
  def Borel : Top ⥤ Meas :=
      concrete_functor @measure_theory.borel
                       @measure_theory.measurable_of_continuous
-
- instance (x : Top)  : topological_space x := x.str
- instance (x : Meas) : measurable_space x  := x.str
-
- instance : concrete_category @measurable :=
-            ⟨@measurable_id, @measurable.comp⟩
-
- instance : concrete_category @continuous :=
-            ⟨@continuous_id, @continuous.comp⟩
 \end{lstlisting}
 
 \subsection*{Джесі Хан}
