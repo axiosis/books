@@ -1,0 +1,17 @@
+\section{Топовий програміст}
+
+\begin{center}
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes,row sep=3em,column sep=3em,minimum width=3em]
+  {
+     F(C) & G(C) \\ % (1,1) (1,2)
+     F(C') & G(C') \\ % (2,1) (2,2)
+  };
+  \path[-stealth]
+    (m-1-1) edge node [above] {$\alpha_c$} (m-1-2)
+    (m-1-1) edge node [left]  {$F(f)$} (m-2-1)
+    (m-1-2) edge node [right] {$G(f)$} (m-2-2)
+    (m-2-1) edge node [above] {$\alpha_{c'}$} (m-2-2);
+\end{tikzpicture}
+\end{center}
+
