@@ -1,0 +1,78 @@
+% Copyright (c) 2022 Synrc Research Center
+
+\usepackage[english,dutch,russian]{babel}
+\usepackage{xeCJK}
+\usepackage{fontspec}
+\usepackage{graphicx,changepage,txfonts}
+\usepackage{newunicodechar}
+\usepackage{amsmath}
+\usepackage{hyphenat}
+\usepackage[top=18mm, bottom=25.4mm,
+            inner=15mm,outer=18mm,
+            paperwidth=142mm, paperheight=200mm]{geometry}
+
+\hyphenation{}
+\fontencoding{T1}
+\addto\captionsrussian{\renewcommand{\contentsname}{Inhoudsopgave}}
+
+\newunicodechar{ꑭ}{ꑭ}
+\newunicodechar{❤}{❤}
+
+\newcommand{\includeimage}[2]
+{\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{#1}
+\caption{#2}
+\end{figure}
+}
+
+\newcommand*{\titleIDEA}
+{
+\newfontfamily{\cyrillicfont}{Geometria}
+\setmainfont{Geometria}
+    \begingroup
+        \thispagestyle{empty}
+        \hspace*{0.15\textwidth}
+        \rule{1pt}{\textheight}
+        \hspace*{0.05\textwidth}
+        {
+        \parbox[c][][s]{0.75\textwidth}
+        {
+             \vspace{-15cm}
+             \textsc{}
+            \\
+             \textsc{\noindent
+             \setmainfont{Geometria}
+             Namdak Tönpa \\ [0.3\baselineskip]
+             \\
+             \Large
+             Het idee van de Natie ꑭ\\[0.5\baselineskip]
+             \\
+             \small
+             Waarom de Russische cultuur verbannen? \\
+             Architectuur van het Russisch fascisme \\
+             Wereldwijde culturele veroordeling \\
+             De tuin van naties \\
+             De woede van Oekraïners \\
+             Vloeken \\
+             Slechts één vraag \\
+             Klein-Russen \\ 
+             Het doel van de Staat \\
+             De laatste lezing \\
+             }
+        }}
+    \endgroup
+    \setmainfont{Geometria}
+}
+
+\lefthyphenmin=1
+\hyphenpenalty=100
+\tolerance=9000
+
+\newcommand{\ru}{\setmainfont{Geometria}}
+\newcommand{\ti}{\setmainfont{DDC Uchen}}
+
+\newlength\tindent
+\setlength{\tindent}{\parindent}
+\setlength{\parindent}{0pt}
+\renewcommand{\indent}{\hspace*{\tindent}}
