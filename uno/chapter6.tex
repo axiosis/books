@@ -149,45 +149,39 @@ The groupoid interpretation of type theory. 1996.} --- так
 аналізу не тільки залежних але і кубічних теорій.
 
 \subsubsection{Гомотопічна інтерпретація}
-In classical MLTT uniquness rule of Id type do holds strictly. In Homotopical
-interpretation of MLTT we need to allow a path space as Path type where uniqueness
-rule doesn't hold. Groupoid interpretation of Path equality that doesn't hold UIP generally
-was given in 1996 by Martin Hofmann and Thomas Streicher.
-
-When objects are defined as fibrations, or dependent products, or indexed-objects
-this leds to fibrational semantics and geometric sheaf interpretation. Several definition
-of fiber bundles and trivial fiber bindle as direct isomorphisms of $\Pi$ types is
-given here as theorem. As fibrations study in homotopical interpretation, geometric
-interpretation could be treated as homotopical.
+В класичних системах MLTT-72, MLTT-73 та MLTT-80 правило унікальносьі для
+Id типу виконується строго. Однак в гомотопічній інтерпретації просторів шляхів
+нам потрібно виключити це правило, аби надати багатовимірну глибину поняття рівності.
+Групоїдна інтерпретація теорії типів розкриває цю мотивацію та необхідність яка
+була показано Мартіном Хофманом та Томасом Стрейхером в 1996.
 
 \subsection{Типи Π, Σ, Path}
 
 \subsubsection{$\Pi$-тип}
-$\Pi$ is a dependent product type, the generalization of functions.
-As a function it can serve the wide range of mathematical constructions
-as its domain and codomain, which are in general: objects, types, or spaces;
-and could have as its instance: sets, functions, polynomial functors,
-infinitesimals, $\infty$-groupoids, topological $\infty$-groupoid, CW-complexes,
-categories, languages, etc.
-
-At this light there could be many interpretation of $\Pi$ types from different
-areas of mathematics. We give here three: i) logical interpretation of $\Pi$ as
-$\forall$ quantifier from higher order logic
-that forms a ground of type theory; ii) geomeric intepretation of $\Pi$ as fiber bundle;
-iii) categorical interpretation of functions as functors.
+$\Pi$-тип --- це простір, що містить залежні функції, тип кодомену
+яких залежить від значення типу домену. Оскільки домен розшарування
+присутній у кожній визначеній функції $\Pi$-тип також є залежним добутком.
+Простори залежних функцій використовуються в теорії типів для моделювання
+різноманітних математичних конструкцій, об’єктів, типів або
+просторів та їхніх відображень: залежних функцій, неперервних відображень,
+етальних відображень, розшарувань, квантору узагальнення, імплікацій тощо.
 
 \subsubsection*{Теоретико-типова інтерпретація}
 Як логічна система теорія залежних типів відповідає логіці вищих порядків,
 одна тут даються виключно правила теоретико-типової MLTT інтерпретації.
 
-\begin{definition} ($\Pi$-Формація).
-$$(x: A) \rightarrow B(x) =_{def} \prod_{x:A}B(x) : U.$$
+\begin{definition} ($\Pi$-Формація). $\Pi$-тип визначає спосіб у який
+в певному всесвіті створюється простір залежних фукнцій $f: \Pi(x:A), B(x)$ з
+доменом в $A$, та кодоменом $B: A \rightarrow U_i$.
+$$\Pi : U =_{def} \prod_{x:A}B(x).$$
 \begin{lstlisting}
-Pi (A: U) (B: A -> U): U = (x: A) -> B x
+def Pi (A: U) (B: A $\rightarrow$ U): U := $\Pi$(x: A), B(x)
 \end{lstlisting}
 \end{definition}
 
-\begin{definition} ($\Pi$-Представлення).
+\begin{definition} ($\Pi$-Представлення). Лямбда-конструктор визначає
+нову лямбда-функцію в просторі залежних функцій — це називається
+лямбда-абстракцією і позначається як $\lambda x. b(x)$ або $x \mapsto b(x)$.
 $$\backslash (x: A) \rightarrow b(x) =_{def} \prod_{A:U}\prod_{B:A \rightarrow U}\prod_{b:\prod_{a:A}B(a)}\lambda x.b(x) : \prod_{y:A}B(y).$$
 \begin{lstlisting}
 lambda (A B: U) (b: B): A -> B = \(x: A) -> b
