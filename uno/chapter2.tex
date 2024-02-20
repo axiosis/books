@@ -378,7 +378,7 @@ O_{\Pi} \rightarrow O_{\Sigma} \rightarrow O_{=} \rightarrow O_{W} \rightarrow O
 генерує відповідну послідовність мов програмування
 \begin{equation}
 \begin{split}
-O_{PTS}(O_\Pi) \rightarrow O_{MLTT-72}(O_\Pi,O_\Sigma) \rightarrow O_{MLTT-73}(..,O_\Sigma,O_=) \rightarrow \\
+O_{PTS}(O_\Pi) \rightarrow O_{MLTT-72}(O_\Pi,O_\Sigma) \rightarrow O_{MLTT-75}(..,O_\Sigma,O_=) \rightarrow \\
  \quad \rightarrow O_{MLTT-80}(...,O_=,O_W) \rightarrow O_{HTS}(...,O_{W},O_I).
 \end{split}
 \end{equation}
@@ -389,7 +389,7 @@ O_{PTS}(O_\Pi) \rightarrow O_{MLTT-72}(O_\Pi,O_\Sigma) \rightarrow O_{MLTT-73}(.
 Розкриті сигнатури мають вигляд:
 $O_{PTS}: O_\Pi \rightarrow U$, \\
 $O_{MLTT-72}: O_\Pi \rightarrow O_\Sigma \rightarrow U$, \\
-$O_{MLTT-73}: O_\Pi \rightarrow O_\Sigma \rightarrow O_= \rightarrow U$, \\
+$O_{MLTT-75}: O_\Pi \rightarrow O_\Sigma \rightarrow O_= \rightarrow U$, \\
 $O_{MLTT-80}: O_\Pi \rightarrow O_\Sigma \rightarrow O_= \rightarrow O_W \rightarrow U$, \\
 $O_{HTS}: O_\Pi \rightarrow O_\Sigma \rightarrow O_= \rightarrow O_W \rightarrow O_I \rightarrow U$.
 \end{definition}
@@ -440,7 +440,7 @@ O_{HTS} = O_{\Pi\Sigma=WI} : O_\Pi \rightarrow O_\Sigma \rightarrow O_= \rightar
     \rowcolor{LightGray}
        $O_\Sigma$                      & Числення контекстів MLTT-72 (контекстуальна повнота) \\
     \rowcolor{LightGray}
-       $O_=$                           & Теорія типів Мартіна-Льофа MLTT-73 (логіка) \\
+       $O_=$                           & Теорія типів Мартіна-Льофа MLTT-75 (логіка) \\
     \rowcolor{LightGray}
        $O_W$                           & Числення (ко-)індуктивних конструкцій W та M дерев MLTT-80 (матіндукція) \\
     \rowcolor{LightGray}
@@ -510,9 +510,9 @@ Hom: \{ 1,2: \mathbb{1} \rightarrow O_{PTS}, 3: O_{PTS} \rightarrow O_{CPS} \}
 \begin{equation}
 Total =
 \begin{cases}
-Ob: \{ O_{CPS}, O_{PTS}, O_{MLTT-73}, O_{MLTT-80}, O_{HTS} \} \\
+Ob: \{ O_{CPS}, O_{PTS}, O_{MLTT-75}, O_{MLTT-80}, O_{HTS} \} \\
 Hom: \begin{cases}
-1,2: \mathbb{1} \rightarrow O_{HTS}, 3: O_{MLTT-73} \rightarrow O_{MLTT-80} \\
+1,2: \mathbb{1} \rightarrow O_{HTS}, 3: O_{MLTT-75} \rightarrow O_{MLTT-80} \\
 4: O_{HTS} \rightarrow O_{MLTT-80}, 5: O_{MLTT-80} \rightarrow O_{PTS}, 6: O_{PTS} \rightarrow O_{CPS}
 \end{cases}
 \end{cases}
@@ -674,18 +674,18 @@ data Forall (lang: U)
 \end{definition}
 
 \newpage
-\subsection{Теорія типів Мартіна-Льофа MLTT-73$}
+\subsection{Теорія типів Мартіна-Льофа MLTT-75$}
 Мова теорії типів є сучасною основою всіх пруверів з залежними типами,
 такими, наприклад, як NuPRL та Agda. Багато так званих $\Pi\Sigma$ пруверів
-імплементують $MLTT-73$ серед таких як:
+імплементують $MLTT-75$ серед таких як:
 $\Pi\Sigma$\footnote{\url{https://github.com/zlizta/pisigma-0-2-2}},
 $\Pi\forall$\footnote{\url{https://github.com/sweirich/pi-forall}}.
 
-\begin{definition} (Мовна категорія $O_{MLTT-73}$).
+\begin{definition} (Мовна категорія $O_{MLTT-75}$).
 \begin{equation}
-O_{MLTT-73} =
+O_{MLTT-75} =
 \begin{cases}
-Ob: \{\ maybe\ MLTT-73\ \} \\
+Ob: \{\ maybe\ MLTT-75\ \} \\
 Hom: \begin{cases}
 type,norm: Ob \rightarrow Ob \\
 certify: Ob \rightarrow Ob = type \circ norm
@@ -694,8 +694,8 @@ certify: Ob \rightarrow Ob = type \circ norm
 \end{equation}
 \end{definition}
 
-\begin{definition} (Синтаксис мовної категорії $O_{MLTT-73}$).
-Мова $O_{MLTT-73}$ включає в себе синтаксиси трьох типів
+\begin{definition} (Синтаксис мовної категорії $O_{MLTT-75}$).
+Мова $O_{MLTT-75}$ включає в себе синтаксиси трьох типів
 теорії Мартіна-Льофа: $O_\Pi$, $O_\Sigma$, $O_=$.
 \begin{lstlisting}
 data MLTT
@@ -719,7 +719,7 @@ data Sigma (lang: U)
 
 \begin{definition} (Синтаксичне дерево $O_=$).
 Додавши тип рівності можно підняти систему ще на одну сходинку,
-до $O_{MLTT-73}$ або $O_{\Pi\Sigma=}$:
+до $O_{MLTT-75}$ або $O_{\Pi\Sigma=}$:
 \begin{lstlisting}[mathescape=true]
 data Id (lang: U)
    = identity (t a b: lang)
@@ -850,7 +850,7 @@ data InductiveSchemes (lang: U)
 
 Головним чином, гомотопічна система складається з наступних частин:
 1) два всесвіти fibrant та pretype;
-2) MLTT-73;
+2) MLTT-75;
 3) CCHM розширення.
 
 \begin{definition} (Мовна категорія $O_{HTS}$).
