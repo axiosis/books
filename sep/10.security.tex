@@ -3,6 +3,119 @@
 
 \section{Центри сертифікації CA, АЦСК, ЦЗО та ОЗО}
 
+\subsection{Електронний підпис і цифрова печатка}
+
+Кваліфікований Електронний Підпис, або Кваліфіклована Електронна Печатка ---
+це набір стандартів криптографічного захисту ДСТУ 4145,
+та міжнародних стандартів які визначають його конверт: X.501, X.509, X.511, X.520.
+
+\renewcommand{\footnotesize}{\tiny}
+
+Серія міжнародних стандартів X.500, групується по категоріям, кожна
+з яких має свій перелік ASN.1 файлів. Аби підключити усі визначення необхідні
+для КЕП використані наступі компоненти стандартів (виділені болдом):
+X.501 --- BasicAccessControl \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2019/BasicAccessControl.html}},
+InformationFramework \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2019/InformationFramework.html}},
+UsefulDefinitions \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x501/2019/UsefulDefinitions.html}};
+X.509 --- SpkmGssTokens \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x509/2019/ExtensionAttributes.html}},
+PkiPmiExternalDataTypes \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x509/2019/PkiPmiExternalDataTypes.html}},
+AttributeCertificateDefinitions \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x509/2019/AttributeCertificateDefinitions.html}}, \\
+AlgorithmObjectIdentifiers \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x509/2019/AlgorithmObjectIdentifiers.html}}, \\
+AuthenticationFramework \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x509/2019/AuthenticationFramework.html}},
+CertificateExtensions \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x509/2019/CertificateExtensions.html}}; \\
+X.511 --- SpkmGssTokens \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x511/2019/SpkmGssTokens.html}},
+DirectoryAbstractService \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x511/2019/DirectoryAbstractService.html}};
+X.520 --- PasswordPolicy \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2019/PasswordPolicy.html}},
+UpperBounds \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2019/UpperBounds.html}},
+SelectedAttributeTypes \footnote{\url{https://www.itu.int/ITU-T/formal-language/itu-t/x/x520/2019/SelectedAttributeTypes.html}}.
+
+Можно було би винести необхідні визначення одразу в KEP.asn1,
+однак цим хотілося підкреслити сумісність з міжнародними стандартами. Окрім серії
+протоколів X.500, КЕП ще визначає також запити та відповіді OCSP, також у ASN.1 форматі.
+
+На відміну від самого алгоритму КЕП, який визначено ДСТУ 4145,
+конверти визначаються не стандартами, а наказами міністерства юстиції:
+Проект наказу Адміністрації Держспецзв'язку та Держкомінфоматизації (2009) \footnote{\url{http://www.dsszzi.gov.ua/dsszzi/control/uk/publish/article?art\_id=77726}},
+Наказ Міністерства юстиції України 1236/5/453 \footnote{\url{https://zakon.rada.gov.ua/laws/show/z1401-12}}.
+Керуючись цими нормативними документами було створено файл KEP.asn1 \footnote{\url{https://github.com/synrc/ca/blob/master/priv/kep/KEP.asn1}},
+який є одним з трьох top-level файлів необхідниї для компіляції ASN.1 компілятором\footnote{\url{https://asn1.erp.uno}}.
+
+Існує небагато безкоштовних та повних компіляторів (генераторів парсерів)
+ASN.1 специфікацій. Erlang є прикладом системи, до складу якої входить
+першокласний безкоштовний з відкритою ліценцією ASN.1 компілятор, де
+файли в ASN.1 нотації можуть бути зкомпільовані безпосередньо Erlang компілятором:
+
+\renewcommand{\footnotesize}{\normal}
+
+\begin{lstlisting}
+> erlc AuthenticationFramework.asn1
+> erlc InformationFramework.asn1
+> erlc KEP.asn1
+\end{lstlisting}
+
+Створити файл підпису PKCS-7 можна за допомогою будь якої програми сертифікованої в Україні.
+Найпростіше отримати свою КЕП печатку будучи клієнтом ПриватБанку. За допомогою
+"Користувача ЦСК" компанії ІІТ ви можете підписувати файли використовуючи безкоштовну
+форму приватного ключа у вигляді звичайного файлу.
+
+\newpage
+\subsubsection{Приклад використання}
+
+Щоб показати як користуватися КЕП, та прочитати атрибутивну інформацію з сертифікату,
+який вшитий в PCKS-7 повідомлення з криптографічним підписом, покажемо 5 функцій:
+
+\renewcommand{\footnotesize}{\tiny}
+
+\begin{lstlisting}[utf8]
+> CA.CAdES.readSignature
+[
+  {:certinfo, ~c"TINUA-2955020254",
+   "СОХАЦЬКИЙ МАКСИМ ЕРОТЕЙОВИЧ",
+   "МАКСИМ ЕРОТЕЙОВИЧ", "СОХАЦЬКИЙ",
+   "СОХАЦЬКИЙ МАКСИМ ЕРОТЕЙОВИЧ",
+   [
+     subjectKeyIdentifier: "VNXfTvJQccGtPgNhUftIQZV+mUROTgroLotsbtYZsFE=",
+     authorityKeyIdentifier: "XphNUm+C84/0vi5ABGgN/rOvysLkBHVNB9CuTISwfB0=",
+     keyUsage: [<<6, 192>>],
+     certificatePolicies: {"https://acsk.privatbank.ua/acskdoc",
+      ["1.2.804.2.1.1.1.2.2", "1.3.6.1.5.5.7.2.1"]},
+     basicConstraints: [],
+     qcStatements: {"https://acsk.privatbank.ua",
+      ["0.4.0.1862.1.1", "0.4.0.1862.1.5", "1.3.6.1.5.5.7.11.2",
+       "0.4.0.194121.1.1", "1.2.804.2.1.1.1.2.1"]},
+     cRLDistributionPoints: ["http://acsk.privatbank.ua/crl/PB-2023-S6.crl"],
+     freshestCRL: ["http://acsk.privatbank.ua/crldelta/PB-Delta-2023-S6.crl"],
+     authorityInfoAccess: [
+       {"1.3.6.1.5.5.7.48.2",
+        "http://acsk.privatbank.ua/arch/download/PB-2023.p7b"},
+       {"1.3.6.1.5.5.7.48.1", "http://acsk.privatbank.ua/services/ocsp/"}
+     ],
+     subjectInfoAccess: [
+       {"1.3.6.1.5.5.7.48.3", "http://acsk.privatbank.ua/services/tsp/"}
+     ],
+     subjectDirectoryAttributes: [
+       {"1.2.804.2.1.1.1.11.1.4.7.1", "0"},
+       {"1.2.804.2.1.1.1.11.1.4.1.1", "2955020254"}
+     ]
+   ], "ФІЗИЧНА ОСОБА", "", "", ~c"UA", "КИЇВ"},
+  {:certinfo, ~c"UA-14360570-2310",
+   "КНЕДП АЦСК АТ КБ \"ПРИВАТБАНК\"", "", "",
+   "КНЕДП АЦСК АТ КБ \"ПРИВАТБАНК\"",
+   [
+     contentType: "0.6.9.42.840.113549.1.7.1",
+     signingTime: "240221110356Z",
+     messageDigest: "MfvlhoDVCPkptQRN+S2zNGp0nrOsS93mLdbcz/kZ9GI=",
+     signingCertificateV2: 540041581425012649131508804155871837613877419268,
+     contentTimestamp: {"1.2.840.113549.1.7.2",
+      36995253346304402407284752111874897026, "20240221110626Z",
+      "MfvlhoDVCPkptQRN+S2zNGp0nrOsS93mLdbcz/kZ9GI="}
+   ], "АТ КБ \"ПРИВАТБАНК\"", "", "", ~c"UA", "Київ"}
+]
+\end{lstlisting}
+\renewcommand{\footnotesize}{\normal}
+
+\subsection{Криптографічні інформаційні повідомлення}
+
 \section{Безпечна система доменних імен DNSSEC}
 
 \section{Система директорії підприємства LDAP}

@@ -1,6 +1,7 @@
 \usepackage[osf]{mathpazo}
 \usepackage[utf8]{inputenc}
 \usepackage{musicography}
+\usepackage{fontspec,unicode-math}
 \usepackage{stmaryrd}
 \usepackage{color,colortbl}
 \usepackage{epigraph}
@@ -21,6 +22,8 @@
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{newunicodechar}
+
+\setmonofont[Mapping=tex-text]{PT Mono}
 
 \definecolor{keywordcolor}{rgb}{0.0, 0.1, 0.6}
 \definecolor{commentcolor}{rgb}{0.4, 0.4, 0.4}   % grey
@@ -199,4 +202,4 @@
 \addto\captionsrussian{\renewcommand{\tablename}{Таблиця}}
 
 \def\lstlanguagefiles{syntax.tex}
-\lstset{language=infinity}
+\lstset{language=infinity,inputencoding=utf8}
