@@ -259,14 +259,13 @@ end
 The very first CMS IETF 3852:1999:
 
 \begin{lstlisting}
-$ gpgsm --list-keys
-$ gpgsm --list-secret-keys
-$ gpgsm -r 0xD3C8F78A -e CNAME > cms.bin
-$ gpgsm -u 0xD3C8F78A -d cms.bin
-$ gpgsm --export-secret-key-p12 0xD3C8F78A > key.bin
-
-$ openssl pkcs12 -in key.bin -nokeys -out public.pem
-$ openssl pkcs12 -in key.bin -nocerts -nodes -out private.pem
+# gpgsm --list-keys
+# gpgsm --list-secret-keys
+# gpgsm -r 0xD3C8F78A -e CNAME > cms.bin
+# gpgsm -u 0xD3C8F78A -d cms.bin
+# gpgsm --export-secret-key-p12 0xD3C8F78A > key.bin
+# openssl pkcs12 -in key.bin -nokeys -out public.pem
+# openssl pkcs12 -in key.bin -nocerts -nodes -out private.pem
 \end{lstlisting}
 
 CMS Codec KTRI: RSA+RSAES-OAEP:
@@ -704,7 +703,418 @@ defmodule CA do
 
 \section{Безпечна система доменних імен DNSSEC}
 
+\newpage
 \section{Система директорії підприємства LDAP}
+
+Пройшло 13 років з того часу як компанія SYNRC випустила була свій власний брендований LDAP Directory Server на Erlang з підтримкою MongoDB. Взагалі баз які підтримують префіксний і суфіксний пошук по B-Tree таблицям не так багато, в основному це складні SQL та MongoDB. Хоча такі бази як Mnesia, LMDB, BDB-похідні (RocksDB, LevelDB) немають повнотекстового пошуку, це можна реалізувати шляхом повного траверса, що на цих базах зазвичай працює швидко (якшо на С), і ше швидше якшо база підтримує mmap (LMDB).
+
+Непереможний по перформенсу станом на зараз є OpenLDAP (LMDB), однак нам хочеться мати свою імплементацію, яку можна було би використовувати як фірмове сховище даних для директорії ресурсів підприємства згідно як міжнародних стандартів так і стандартів України. Ми захотіли відмовитися від зовнішньої бази даних (MongoDB) що ускладнює розробку, і хотілося вибрати шось вбудовуване для Erlang, вибирали між zambal/elmdb та elixir-sqlite/exqlite, переміг SQLite тому шо хотілося мати мінімальну ідіоматичну імплементацію, така шоб з одного боку була зрозуміла навіть людям без глибокої освіти в Computer Science, а з іншого боку відкривала двері в підтримку інших промислових корпоративних SQL джерел даних (Oracle, T-SQL, PostgreSQL).
+
+На відміну від попередньої версії SYNRC LDAP яка робилася під стартап PEOPLE|SYNC який ми хотіли продати PEOPLE|NET, а потім Київстар, як SyncML стартап по синхронізації контактних книг, ця версія робиться для стартапа SYNRC CHAT для розвідки. В цій версії ми значну увагу приділили сумісністю з клієнтами, такими як Apache Directory Studio, а також усіма LDIF файлами які ми змогли знайти в інтернеті.
+
+Так як якісну безпечну розподілену інфраструктуру яка відповідає міжнародним і українським стандартами неможливо створити без CA/CMS, OCSP, TSP, LDAP, DNS/DNSSEC, MQTT серверів, то всі ці сервери є фундаментом продуктів SYNRC які формують перший рівень фреймворку Сохацького який умовно називається Security або Безпека Підприємства. На цьому фреймворку побудовані головні інфраструктурні елементи країни, а також реєстрові системи.
+
+Загалом, LDAP це дуже древня і надійна технологія яка присутня буквально у всіх топових компаніях, корпораціях, великих і малих бізнесах. Так, є сучасній Identity Server продукти (Hashicorp) які не підтримуються LDAP, але це поодинокі непопулярні маргінальні екземпляри. SYNRC LDAP це гарний початок для малих, середніх і великих бізнесів навести порядок в штатних розкладах, календарях, задачах, ресурсах підприємства, таких як автопарки, IoT, реєстрах персональних і промислових комп'ютерів, портів, правил ABAC, правил маршрутизації, контактних книгах користувачів, одним словом все для чого створений і де використовується LDAP.
+
+\subsection{Вертикальні бази}
+
+Я вперше познайомився з вертикальними базами коли працював в International Land Systems, Inc. Тоді в нас була система документообігу на вертикальній базі, які дуже часто використовуються в системах документообігу. Наприклад таку схему даних використовує Alfresco, а також SQL розширення для зберігання XML у Oracle та інших SQL базах.
+
+Основна ідея вертикальних баз, або схем, полягає в тому шо об'єкти зберігаються не у плоских таблицях де кожен атрибут це окрема колонка, а всі атрибути та їх значення зберігаються в трьох колонках, де перша — це номер об'єкта, друга — ім'я атрибута, а третя — значення атрибуту. Це дозволяє тримати розріжені (атрибутами) об'єкти, та певним чином спростити управління базою. Всі наївні імплементації вертикальних баз страждаються по перформенсу, тому потрібно бути обрежним. Наприклад, ми не рекомендуємо використовувати SYNRC LDAP де об'єм директоріє більше ніж пів мільйона співробітників, наприклад для Walmart. Для великих корпорацій краще брати OpenLDAP.
+
+\subsection{Предметна область}
+
+\subsubsection{Netscape, Sun DS, 389 DS, Oracle}
+
+PEOPLE|SYNC стартап SYNRC 2007 року підтримував також роботу з Sun Directory Server. Його родовід бере початок від сервера OpenLDAP, в 1996 року стартував форк Netscape Directory Server. Після банкротства Netscape право на код викупила компанія AOL, яка ліцензувала право на розробку компанії Sun Microsystems, зберігши право на код. В 2009 році Sun DS був переіменований на 389 Directory Server, а Oracle почала свій форк Sun DS під назвою Oracle Directory Server. 389 Directory Server також можна зустріти під іменами Fedora DS та Red Hat DS, оскільки це основні донори проекту.
+
+\subsubsection{Microsoft Active Directory}
+
+Традиційно кожна корпорація займається розробкою свого LDAP сервера, компанія Microsoft випустила свій перший в 1999 році. Active Directory у якості бекенда використовує Extensible Storage Engine ESENT.DLL, також відомий як JetDB, на яцій побудований також Windows Registry, Microsoft Access, та можливо і інші внутрішні продукти компанії Microsoft.
+
+\subsubsection{OpenLDAP, Apple Open Directory}
+
+Були часи, що OpenLDAP був вбудований в кожну версію Mac OS X, але Apple почала розвивати свій власний Open Directory Server, оскільки безпека кожної корпорації полягає у тому числі в брендованих LDAP серверах під свої потреби та політику розробки..
+
+\subsection{TCP сервер}
+
+Я неодноразово використовував написання LDAP серверу у своїх Erlang курсах, а також на конференціях у якості майстер-класу по програмуванню, де ми з аудиторією пишемо всі разом LDAP сервер за 45 хвилин з моїми коментарями та інтеракцією. Рекорд на відео був поставлений 30 хвилин, так шо це не прікол, я дійсню MVP всіх продуктів SYNRC можу написати за 30 хвилин кожен. Власне це є одним з критеріїв SYNRC, що тісно переплетено з показником LOC. Ця версія SYNRC LDAP з підтримкою SQLite займає 300 рядків коду і проходить всі LDIF тест сюїти.
+
+Перед початком поставте Erlang та його Erlang AST фронтенд Elixir. Ставити можна завжди тільки Elixir, Erlang піде як залежність в будь-якому пекедж менеджері.
+
+\begin{lstlisting}
+# apt install elixir
+\end{lstlisting}
+
+Створюємо папку проекту і в ній створюємо файл mix.exs для уніфікованого депенденсі і пекадж менеджера Erlang і Elixir мов, mix.
+
+Крім класичної прелюдії mix.exs, нам цікавий параметр exqlite, це ім'я бібліотеки пакетного менеджера hex.pm, яка містить в собі 8-мегабайтний Сі файл, і FFI обгортку для нього яка в Erlang світі називається NIF.
+
+\begin{lstlisting}
+defmodule LDAP.Mixfile do
+  use Mix.Project
+  def project(), do:
+    [ app: :ldap, version: "8.7.20", deps: deps(),
+      releases: [ ldap: [ include_executables_for: [:unix],
+                          cookie: "SYNRC:LDAP" ] ] ]
+  def application(), do:
+    [ mod: {LDAP, []},
+      extra_applications: [ :eldap, :asn1 ] ] end
+  def deps(), do:
+    [ {:exqlite, "~> 0.13.14"} ]
+end
+\end{lstlisting}
+
+Далі пишемо найпростіший ідіоматичний Erlang TCP сервер. Довгий час я використовував класичні, розширені версії на недокументованій функції prim_inet:async_accept, такий як 5HT/tcp, але зрештою відмовився так як не вбачаю в надмірному контролі семантики процесу ніяких перевах, для нас діє така сама семантика як в вебі, відвалився клієнт і нічого страшного, нікому його контроль на рівні сигналінгу не потрібен. Ми не слідкуємо за LDAP клієнтами!
+
+Якшо в config/config.exs немає параметра ldap:intance то створюється нова SQLite база по рендомному хешу з налаштуваннями по перформансу: 1) відключений журнал, 2) ін-меморі буфер, 3) великий кеш, 4) примусова синхронність; які визначаються відповідними SQL прагмами.
+
+Архітектура TCP сервера відповідає POSIX, ми створюємо лістенер, який на кожне вхідне TCP повідомлення стартує акцептори, які стартують некотрольований Erlang процес — лупер, який обслуговує вхідне TCP повідомлення. Для декодування використовується згенерований ASN.1 компілятором енкодер/декодер LDAP протоколу по файлу LDAP.ans1, який можна знайти прямо в RFC IETF на нормативно-правових актах України.
+
+\begin{lstlisting}
+# erlc LADP.asn1
+Після геренації покладіть файли в LDAP.erl та LDAP.hrl в папку src проекту. А в папці lib створіть обгортку для згенерованих рекордів за допомогою Record,
+\end{lstlisting}
+
+\begin{lstlisting}
+defmodule DS do
+    require Record
+    Enum.each(Record.extract_all(from_lib: "ldap/include/LDAP.hrl"),
+             fn {name, definition} -> Record.defrecord(name, definition) end)
+end
+\end{lstlisting}
+
+а також створіть козу Erlang аплікейшина в Elixir синтаксисі, файл ldap.ex:
+
+\begin{lstlisting}
+defmodule LDAP do
+   import Exqlite.Sqlite3
+   require DS
+   use Application
+   use Supervisor
+
+   def code(), do: :binary.encode_hex(:crypto.strong_rand_bytes(8))
+   def init([]), do: {:ok, { {:one_for_one, 5, 10}, []} }
+   def start(_, _) do
+       :logger.add_handlers(:ldap)
+       :supervisor.start_link({:local, LDAP}, LDAP, [])
+   end
+
+   def initDB(path) do
+       {:ok, conn} = open(path)
+       :logger.info 'SYNRC LDAP Instance: ~p', [path]
+       :logger.info 'SYNRC LDAP Connection: ~p', [conn]
+       execute(conn, "create table ldap (rdn text,att text,val binary)")
+       :ok = execute(conn, "PRAGMA journal_mode = OFF;")
+       :ok = execute(conn, "PRAGMA temp_store = MEMORY;")
+       :ok = execute(conn, "PRAGMA cache_size = 1000000;")
+       :ok = execute(conn, "PRAGMA synchronous = 0;")
+       conn
+   end
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+   def listen(port,path) do
+       conn = initDB(path)
+       {:ok, socket} = :gen_tcp.listen(port,
+         [:binary, {:packet, 0}, {:active, false}, {:reuseaddr, true}])
+       accept(socket,conn)
+   end
+
+   def accept(socket,conn) do
+       {:ok, fd} = :gen_tcp.accept(socket)
+       :erlang.spawn(fn -> loop(fd, conn) end)
+       accept(socket,conn)
+   end
+
+   def start() do
+       :erlang.spawn(fn ->
+           listen(:application.get_env(:ldap,:port,1489),
+                  :application.get_env(:ldap,:instance,code())) end)
+   end
+
+    def answer(response, no, op, socket) do
+        message = DS."LDAPMessage"(messageID: no, protocolOp: {op, response})
+        {:ok, bytes} = :'LDAP'.encode(:'LDAPMessage', message)
+        send = :gen_tcp.send(socket, :erlang.iolist_to_binary(bytes))
+    end
+
+   def loop(socket, db) do
+       case :gen_tcp.recv(socket, 0) do
+            {:ok, data} ->
+                 case :'LDAP'.decode(:'LDAPMessage',data) do
+                      {:ok,decoded} ->
+                          {:'LDAPMessage', no, payload, _} = decoded
+#                         message(no, socket, payload, db)
+                          loop(socket, db)
+                      {:error,reason} ->
+                         :logger.error 'ERROR: ~p', [reason]
+                        :exit
+                 end
+            {:error, :closed} -> :exit
+       end
+   end
+end
+\end{lstlisting}
+
+Цей сервер вже може відповідати на запити ldapmodify але буде їх блокувати так як поки що не відповідає належним чином. Запустити програму можна класичними мантрами Elixir, а в Elixir Shell виконати функцію запуску TCP лістенера, для цього перевпевніться що дефаултний порт 1389 вільний.
+
+\begin{lstlisting}
+$ mix deps.get
+$ iex -S mix
+> LDAP.start
+#PID<0.311.0>
+iex(2)>
+04:58:26.030 [info]  SYNRC LDAP Instance: "416C4C41ED2C7060"
+04:58:26.030 [info]  SYNRC LDAP Connection: #Reference<0.1146704550.396492828.212314>
+iex(3)>
+nil
+\end{lstlisting}
+
+\newpage
+\subsubsection{BIND}
+
+Для удачного демо я раджу починати з функції BIND. Для цього створимо в базі записи по яким будемо аутентифікуватися.
+
+\begin{lstlisting}
+  createDN(conn, "dc=synrc,dc=com",
+      [ attr("dc",["synrc"]),
+        attr("objectClass",["top","domain"]) ])
+  createDN(conn, "ou=schema",
+      [ attr("ou",["schema"]),
+        attr("objectClass",["top","domain"]) ])
+  createDN(conn, "cn=tonpa,dc=synrc,dc=com",
+      [ attr("cn",["tonpa"]),attr("uid",["1000"]),
+        attr("objectClass",["inetOrgPerson","posixAccount"]) ])
+  createDN(conn, "cn=rocco,dc=synrc,dc=com",
+      [ attr("cn",["rocco"]),attr("uid",["1001"]),
+        attr("objectClass",["inetOrgPerson","posixAccount"]) ])
+  createDN(conn, "cn=admin,dc=synrc,dc=com",
+      [ attr("rootpw",["secret"]), attr("cn",["admin"]),
+        attr("objectClass",["inetOrgPerson"]) ])
+  def appendNotEmpty([]),  do: []
+  def appendNotEmpty(res) do
+      res ++ case res do [] -> [] ; _ -> ',' end
+  end
+  def createDN(db, dn, attributes) do
+      norm  = :lists.foldr(fn {:PartialAttribute, att, vals}, acc ->
+              :lists.map(fn val -> [qdn(dn),att,val] end, vals) ++ acc end, [], attributes)
+      {_,p} = :lists.foldr(fn x, {acc,res}  -> {acc + length(x), appendNotEmpty(res) ++
+              :io_lib.format('(?~p,?~p,?~p)',[acc+1,acc+2,acc+3])} end, {0,[]}, norm)
+      {:ok, statement} = prepare(db, 'insert into ldap (rdn,att,val) values ' ++ p ++ '')
+      :ok = bind(db, statement, :lists.flatten(norm))
+      :done = step(db, statement)
+  end
+   def message(no, socket, {:bindRequest, {_,_,bindDN,{:simple, password}}}, db) do
+       {:ok, statement} = prepare(db,
+           "select rdn, att from ldap where rdn = ?1 and att = 'rootpw' and val = ?2")
+       bind(db, statement, [hash(qdn(bindDN)),password])
+       case step(db, statement) do
+           :done ->  code = :invalidCredentials
+                     :logger.error 'BIND Error: ~p', [code]
+                     response = DS."BindResponse"(resultCode: code,
+                         matchedDN: "", diagnosticMessage: 'ERROR')
+                     answer(response, no, :bindResponse, socket)
+            {:row,[dn,password]} ->
+                     :logger.info 'BIND DN: ~p', [bindDN]
+                     response = DS."BindResponse"(resultCode: :success,
+                          matchedDN: "", diagnosticMessage: 'OK')
+                     answer(response, no, :bindResponse, socket)
+       end
+   end
+
+   def message(no, socket, {:bindRequest, {_,_,bindDN,creds}}, db) do
+       code = :authMethodNotSupported
+       :logger.info 'BIND ERROR: ~p', [code]
+       response = DS."BindResponse"(resultCode: code,
+          matchedDN: "", diagnosticMessage: 'ERROR')
+       answer(response, no, :bindResponse, socket)
+   end
+\end{lstlisting}
+
+\newpage
+\subsubsection{ADD}
+
+\begin{lstlisting}
+def message(no, socket, {:addRequest, {_,dn, attributes}}, db) do
+      {:ok, statement} = prepare(db, "select rdn, att, val from ldap where rdn = ?1")
+      bind(db, statement, [hash(qdn(dn))])
+      case step(db, statement) do
+            {:row, _} ->
+                :logger.info 'ADD ERROR: ~p', [dn]
+                resp = DS.'LDAPResult'(resultCode: :entryAlreadyExists,
+                       matchedDN: dn, diagnosticMessage: 'ERROR')
+                answer(resp, no, :addResponse, socket)
+            :done ->
+                createDN(db, dn, attributes)
+                :logger.info 'ADD DN: ~p', [dn]
+                resp = DS.'LDAPResult'(resultCode: :success,
+                       matchedDN: dn, diagnosticMessage: 'OK')
+                answer(resp, no, :addResponse, socket)
+       end
+   end
+\end{lstlisting}
+
+\newpage
+\subsubsection{DSE}
+
+Якшо тестувати наш прото-сервер не ldapmodify, а Apache Directory Studio, то вона початково буде питати так званий Root DSE об'єкт запитуючи після bind, search реквест з пустим DN. Для коректної репрезентації спеціалізованої інформації ми прошиємо стандартну відповідь на цей запит для нашого фірмового SYNRC LDAP сервера версії 2.0 який підтримує протокол LDAPv3. Він підтримує SIMPLE спосіб аунтентифікації тільки (поки що) і два іменних простори ключів: dc=synrc,dc=com ou=schema, як виманає декілька RFC. Це всьо пакується у LDAPMessage і відправляється на клієнт функцією answer.\end{lstlisting}
+
+\begin{lstlisting}
+def attr(k,v),      do: {:PartialAttribute, k, v}
+   def node(dn,attrs), do: {:SearchResultEntry, dn, attrs}
+
+   def message(no, socket,
+       {:searchRequest, {_,"",scope,_,limit,_,_,filter,attributes}}, db) do
+
+       :logger.info 'DSE Scope: ~p', [scope]
+       :logger.info 'DSE Filter: ~p', [filter]
+       :logger.info 'DSE Attr: ~p', [attributes]
+
+       :lists.map(fn response -> answer(response,no,:searchResEntry,socket) end,
+         [ node("", [
+              attr("supportedLDAPVersion", ['3']),
+              attr("namingContexts", ['dc=synrc,dc=com','ou=schema']),
+              attr("supportedControl", ['1.3.6.1.4.1.4203.1.10.1']),
+              attr("supportedExtensions", ['1.3.6.1.4.1.4203.1.11.3']),
+              attr("altServer", ['ldap.synrc.com']),
+              attr("subschemaSubentry", ['ou=schema']),
+              attr("vendorName", ['SYNRC LDAP']),
+              attr("vendorVersion", ['2.0']),
+              attr("supportedSASLMechanisms", ['SIMPLE']),
+              attr("objectClass", ['top','extensibleObject']),
+              attr("entryUUID", [code()])]),
+              attr("supportedFeatures", [ '1.3.6.1.1.14',
+                                          '1.3.6.1.4.1.4203.1.5.1'])
+         ])
+
+       resp = DS.'LDAPResult'(resultCode: :success, matchedDN: "", diagnosticMessage: 'OK')
+       answer(resp, no, :searchResDone,socket)
+   end
+\end{lstlisting}
+
+Після цього зможуть розгортати в інтерфейсі дерево об'єктів.
+
+\newpage
+\subsubsection{MODIFY}
+
+\begin{lstlisting}
+   def modifyDN(db, dn, attributes), do:
+       :lists.map(fn {_, :add, x}     -> modifyAdd(db,dn,x)
+                     {_, :replace, x} -> modifyReplace(db,dn,x)
+                     {_, :delete, x}  -> modifyDelete(db,dn,x) end, attributes)
+
+   def modifyAdd(db, dn, {_,att,[val]}) do
+       {:ok, st} = prepare(db, "insert into ldap (rdn,att,val) values (?1,?2,?3)")
+       :logger.info 'MOD ADD RDN: ~p', [hash(qdn(dn))]
+       bind(db, st, [hash(qdn(dn)),att,val])
+       step(db,st)
+   end
+
+   def modifyReplace(db, dn, {_,att,[val]}) do
+       {:ok, st} = prepare(db, "update ldap set val = ?1 where rdn = ?2 and att = ?3")
+       :logger.info 'MOD REPLACE RDN: ~p', [hash(qdn(dn))]
+       bind(db, st, [val,hash(qdn(dn)),att])
+       step(db,st)
+   end
+
+   def modifyDelete(db, dn, {_,att,_}) do
+       {:ok, st} = prepare(db, "delete from ldap where rdn = ?1 and att = ?2")
+       :logger.info 'MOD DEL RDN: ~p', [hash(qdn(dn))]
+       bind(db, st, [hash(qdn(dn)),att])
+       res = step(db,st)
+       collect0(db,st,res,[])
+   end
+
+   def message(no, socket, {:modifyRequest, {_,dn, attributes}}, db) do
+      {:ok, statement} = prepare(db, "select rdn, att, val from ldap where rdn = ?1")
+      bind(db, statement, [hash(qdn(dn))])
+      case step(db, statement) do
+           {:row, _} -> :logger.info 'MOD DN: ~p', [dn]
+                        modifyDN(db, dn, attributes)
+                        resp = DS.'LDAPResult'(resultCode: :success,
+                            matchedDN: dn, diagnosticMessage: 'OK')
+                        answer(resp, no, :modifyResponse, socket)
+           :done ->     :logger.info 'MOD ERROR: ~p', [dn]
+                        resp = DS.'LDAPResult'(resultCode: :noSuchObject,
+                           matchedDN: dn, diagnosticMessage: 'ERROR')
+                        answer(resp, no, :modifyResponse, socket)
+      end
+   end
+\end{lstlisting}
+
+\newpage
+\subsubsection{MODIFY DN}
+
+\begin{lstlisting}
+   def modifyRDN(socket, no, db, dn, new, del) do
+       {:ok, st} = prepare(db, "update ldap set rdn = ?1 where rdn = ?2")
+       :logger.info 'MODIFY RDN UPDATE: ~p', [hash(qdn(dn))]
+       bind(db, st, [new,hash(qdn(dn))])
+       step(db,st)
+   end
+
+   def message(no, socket, {:modDNRequest, {_,dn,new,del,_}}, db) do
+       :logger.info 'MOD RDN DN: ~p', [dn]
+       :logger.info 'MOD RDN newRDN: ~p', [new]
+       :logger.info 'MOD RDN deleteOldRDN: ~p', [del]
+       modifyRDN(socket, no, db, dn, new, del)
+       resp = DS.'LDAPResult'(resultCode: :success,
+           matchedDN: dn, diagnosticMessage: 'OK')
+       answer(resp, no, :modDNResponse, socket)
+   end
+\end{lstlisting}
+
+\subsubsection{DELETE}
+
+\begin{lstlisting}
+def deleteDN(db, dn) do
+       {:ok, st} = prepare(db, "delete from ldap where rdn = ?1")
+       bind(db, st, [hash(qdn(dn))])
+       res = step(db,st)
+       collect0(db,st,res,[])
+   end
+
+   def message(no, socket, {:delRequest, dn}, db) do
+       :logger.info 'DEL DN: ~p', [dn]
+       deleteDN(db, dn)
+       resp = DS.'LDAPResult'(resultCode: :success, matchedDN: dn, diagnosticMessage: 'OK')
+       answer(resp, no, :delResponse, socket)
+   end
+\end{lstlisting}
+
+\subsubsection{SEARCH}
+
+\subsubsection{COMPARE}
+
+\begin{lstlisting}
+def message(no, socket, {:compareRequest, {_,dn, assertion}}, db) do
+       :logger.info 'CMP DN: ~p', [dn]
+       :logger.info 'CMP Assertion: ~p', [assertion]
+       result = compareDN(db, db, assertion)
+       resp = DS.'LDAPResult'(resultCode: :success, matchedDN: dn, diagnosticMessage: 'OK')
+       answer(resp, no, :compareResponse, socket)
+   end
+\end{lstlisting}
+
+\subsubsection{ABANDON/UNBIND}
+
+\begin{lstlisting}
+   def message(no, socket, {:abandonRequest, _}, db), do: :gen_tcp.close(socket)
+   def message(no, socket, {:unbindRequest,  _}, db), do: :gen_tcp.close(socket)
+\end{lstlisting}
+
+\subsection{Висновки}
+
+У цій статті ми переконалися, що можливо написати LDAP сервер на 300 рядків, а також що SQLite підходить для малих підприємств у якості сховища даних. Ми взяли повний контроль над продуктом, який не містить залежностей, що функціонують за межами контексту віртуальної машини, а також спростили процес розробки більш складних систем на базі цього продукту. Продукт буде корисний для апробації в підприємства зі стандартизованими та уніфікованими політиками управління ресурсами підприємствах, в телекомунікаційних продуктах, комунікаторах, месенджерах, тощо.
+
+\begin{lstlisting}
+\end{lstlisting}
 
 \section{Протокол розмежування доступу ABAC}
 
+\subsection{PEP}
+\subsection{PIP}
+\subsection{PDP}
