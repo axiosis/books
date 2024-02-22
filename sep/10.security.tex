@@ -1,15 +1,13 @@
 \addtocontents{toc}{\protect\newpage}
 \chapter{Інфраструктурний рівень безпеки інтернету}
 
-\section{Центри сертифікації CA, АЦСК, ЦЗО та ОЗО}
-
-\subsection{Електронний підпис і цифрова печатка}
+\section{Електронний підпис і цифрова печатка}
 
 Кваліфікований Електронний Підпис, або Кваліфіклована Електронна Печатка ---
 це набір стандартів криптографічного захисту ДСТУ 4145,
 та міжнародних стандартів які визначають його конверт: X.501, X.509, X.511, X.520.
 
-\renewcommand{\footnotesize}{\tiny}
+\renewcommand{\footnotesize}{\scriptsize}
 
 Серія міжнародних стандартів X.500, групується по категоріям, кожна
 з яких має свій перелік ASN.1 файлів. Аби підключити усі визначення необхідні
@@ -33,6 +31,7 @@ SelectedAttributeTypes \footnote{\url{https://www.itu.int/ITU-T/formal-language/
 однак цим хотілося підкреслити сумісність з міжнародними стандартами. Окрім серії
 протоколів X.500, КЕП ще визначає також запити та відповіді OCSP, також у ASN.1 форматі.
 
+\newpage
 На відміну від самого алгоритму КЕП, який визначено ДСТУ 4145,
 конверти визначаються не стандартами, а наказами міністерства юстиції:
 Проект наказу Адміністрації Держспецзв'язку та Держкомінфоматизації (2009) \footnote{\url{http://www.dsszzi.gov.ua/dsszzi/control/uk/publish/article?art\_id=77726}},
@@ -59,12 +58,12 @@ ASN.1 специфікацій. Erlang є прикладом системи, д�
 форму приватного ключа у вигляді звичайного файлу.
 
 \newpage
-\subsubsection{Приклад використання}
+\subsection{Приклад використання}
 
 Щоб показати як користуватися КЕП, та прочитати атрибутивну інформацію з сертифікату,
 який вшитий в PCKS-7 повідомлення з криптографічним підписом, покажемо 5 функцій:
 
-\renewcommand{\footnotesize}{\tiny}
+\renewcommand{\footnotesize}{\scriptsize}
 
 \begin{lstlisting}[utf8]
 > CA.CAdES.readSignature
@@ -114,7 +113,594 @@ ASN.1 специфікацій. Erlang є прикладом системи, д�
 \end{lstlisting}
 \renewcommand{\footnotesize}{\normal}
 
-\subsection{Криптографічні інформаційні повідомлення}
+\newpage
+\section{Криптографічні інформаційні повідомлення}
+
+Реалізації повинні підтримувати транспортування ключів, узгодження ключів
+і раніше розподілені симетричні ключі шифрування ключів, представлені ktri,
+kari та kekri відповідно.
+
+Реалізації можуть підтримувати керування ключами на основі пароля,
+представлене pwri. Реалізації МОЖУТЬ підтримувати будь-які інші методи
+керування ключами, такі як шифрування на основі ідентифікації Боне-Франкліна
+та Боне-Бойєна (RFC 5409) або інші методи шифрування SYNRC, такі як варіанти
+KYBER Key Transport (LAMPS-WG) для постквантової криптографії (PQC).
+
+IETF (SMIME-WG) стандарти: 5990, 5911, 5750--5754, 5652, 5408, 5409,
+5275, 5126, 5035, 4853, 4490, 4262, 4134, 4056, 4010, 3850, 3851,
+3852, 3854, 3855, 3657, 3560, 3565, 3537, 3394, 3369, 3370, 3274,
+3114, 3278, 3218, 3211, 3217, 3183, 3185, 3125--3126, 3058, 2984,
+2876, 2785, 2630, 2631, 2632 , 2633, 5083, 5084, 2634.
+
+Сумісність: Erlang SSL, LibreSSL CMS, OpenSSL CMS, GnuPG S/MIME.
+
+\subsection{Головна функція}
+
+Специфікація синтаксису криптографічних повідомлень CMS X.509 для
+дисципліни RSA (Key Transport), ECC (Key Agreement), KEK (Key Encryption Key)
+для додатків Erlang/OTP, які ніколи не преживала heartbleed (!) CRYPTO та SSL.
+Реалізовано як модуль CMS програми CA.
+
+\renewcommand{\footnotesize}{\scriptsize}
+
+\begin{lstlisting}
+defmodule CMS do
+    def decrypt(cms, {schemeOID, privateKeyBin}) do
+        {_,{:ContentInfo,_,{:EnvelopedData,_,_,x,y,_}}} = cms
+        {:EncryptedContentInfo,_,{_,encOID,{_,<<_::16,iv::binary>>}},data} = y
+              case :proplists.get_value(:kari,  x, []) do
+        [] -> case :proplists.get_value(:ktri,  x, []) do
+        [] -> case :proplists.get_value(:kekri, x, []) do
+        [] -> case :proplists.get_value(:pwri,  x, []) do
+        [] -> {:error, "Unknown Other Recepient Info"}
+              pwri  -> pwri(pwri,   privateKeyBin, encOID, data, iv) end
+              kekri -> kekri(kekri, privateKeyBin, encOID, data, iv) end
+              ktri  -> ktri(ktri,   privateKeyBin, encOID, data, iv) end
+              kari  -> kari(kari,   privateKeyBin, schemeOID, encOID, data, iv) end
+    end
+end
+\end{lstlisting}
+
+\newpage
+\subsection{CMS-KARI-ECC}
+
+IETF 3278:2002 Використання алгоритмів криптографії еліптичних
+кривих (ECC) у синтаксисі криптографічних повідомлень (CMS) із
+підтримкою Suite B IETF 5008:2007, 6318:2011.
+
+\begin{lstlisting}
+$ openssl cms -decrypt -in encrypted.txt -inkey client.key -recip client.pem
+$ openssl cms -encrypt -aes256 -in message.txt -out encrypted.txt \
+                       -recip client.pem -keyopt ecdh_kdf_md:sha256
+\end{lstlisting}
+
+CMS Codec KARI: ECC+KDF/ECB+AES/KW+256/CBC:
+
+\begin{lstlisting}
+def map(:'dhSinglePass-stdDH-sha512kdf-scheme'), do: :sha512
+def map(:'dhSinglePass-stdDH-sha384kdf-scheme'), do: :sha384
+def map(:'dhSinglePass-stdDH-sha256kdf-scheme'), do: :sha256
+def eccCMS(ukm, bit), do:
+    :'CMSECCAlgs-2009-02'.encode(:'ECC-CMS-SharedInfo', sharedInfo(ukm, bit))
+def sharedInfo(ukm, len), do: {:'ECC-CMS-SharedInfo',
+    {:'KeyWrapAlgorithm',{2,16,840,1,101,3,4,1,45},:asn1_NOVALUE}, ukm, <>}
+
+def kari(kari, privateKeyBin, schemeOID, encOID, data, iv) do
+    {_,:v3,{_,{_,_,publicKey}},ukm,{_,kdfOID,_},[{_,_,encryptedKey}]} = kari
+    {scheme,_}  = CA.ALG.lookup(schemeOID)
+    {kdf,_}     = CA.ALG.lookup(kdfOID)
+    {enc,_}     = CA.ALG.lookup(encOID)
+    sharedKey   = :crypto.compute_key(:ecdh,publicKey,privateKeyBin,scheme)
+    {_,payload} = eccCMS(ukm, 256)
+    derived     = KDF.derive(map(kdf), sharedKey, 32, payload)
+    unwrap      = CA.AES.KW.unwrap(encryptedKey, derived)
+    res         = CA.AES.decrypt(enc, data, unwrap, iv)
+    {:ok, res}
+end
+def testDecryptECC(), do: CA.CMS.decrypt(testECC(), testPrivateKeyECC())
+
+def testECC() do
+    {:ok,base} = :file.read_file "priv/certs/encrypted.txt"
+    [_,s] = :string.split base, "\n\n"
+    x = :base64.decode s
+    :'CryptographicMessageSyntax-2010'.decode(:ContentInfo, x)
+end
+
+def testPrivateKeyECC() do
+    privateKey = :public_key.pem_entry_decode(pem("priv/certs/client.key"))
+    {:'ECPrivateKey',_,privateKeyBin,{:namedCurve,schemeOID},_,_} = privateKey
+    {schemeOID,privateKeyBin}
+end
+\end{lstlisting}
+
+
+\newpage
+\subsection{CMS-KEKRI-KEK}
+
+Інформація про одержувача ключа шифрування ключа, як визначено CMS IETF 5652:2009, 3852:2004, 3369:2002, 2630:1999.
+
+\begin{lstlisting}
+$ openssl cms -encrypt -secretkeyid 07 \
+              -secretkey 0123456789ABCDEF0123456789ABCDEF \
+              -aes256 -in message.txt -out encrypted2.txt
+
+$ openssl cms -decrypt -in encrypted2.txt -secretkeyid 07 \
+              -secretkey 0123456789ABCDEF0123456789ABCDEF
+\end{lstlisting}
+
+CMS Codec KEKRI: KEK+AES-KW+CBC:
+
+\begin{lstlisting}
+def kekri(kekri, privateKeyBin, encOID, data, iv) do
+    {:'KEKRecipientInfo',_vsn,_,{_,kea,_},encryptedKey} = kekri
+    _ = CA.ALG.lookup(kea)
+    {enc,_} = CA.ALG.lookup(encOID)
+    unwrap = CA.AES.KW.unwrap(encryptedKey,privateKeyBin)
+    res = CA.AES.decrypt(enc, data, unwrap, iv)
+    {:ok, res}
+end
+def testDecryptKEK(), do: CA.CMS.decrypt(testKEK(), testPrivateKeyKEK())
+
+def testPrivateKeyKEK() do
+    {:kek, :binary.decode_hex("0123456789ABCDEF0123456789ABCDEF")}
+end
+
+def testKEK() do
+    {:ok,base} = :file.read_file "priv/certs/encrypted2.txt"
+    [_,s] = :string.split base, "\n\n"
+    x = :base64.decode s
+    :'CryptographicMessageSyntax-2010'.decode(:ContentInfo, x)
+end
+\end{lstlisting}
+
+\newpage
+\subsection{CMS-KTRI-RSA}
+
+The very first CMS IETF 3852:1999:
+
+\begin{lstlisting}
+$ gpgsm --list-keys
+$ gpgsm --list-secret-keys
+$ gpgsm -r 0xD3C8F78A -e CNAME > cms.bin
+$ gpgsm -u 0xD3C8F78A -d cms.bin
+$ gpgsm --export-secret-key-p12 0xD3C8F78A > key.bin
+
+$ openssl pkcs12 -in key.bin -nokeys -out public.pem
+$ openssl pkcs12 -in key.bin -nocerts -nodes -out private.pem
+\end{lstlisting}
+
+CMS Codec KTRI: RSA+RSAES-OAEP:
+
+\begin{lstlisting}
+def ktri(ktri, privateKeyBin, encOID, data, iv) do
+    {:'KeyTransRecipientInfo',_vsn,_,{_,schemeOID,_},key} = ktri
+    {:rsaEncryption,_} = CA.ALG.lookup schemeOID
+    {enc,_} = CA.ALG.lookup(encOID)
+    sessionKey = :public_key.decrypt_private(key, privateKeyBin)
+    res = CA.AES.decrypt(enc, data, sessionKey, iv)
+    {:ok, res}
+end
+def testDecryptRSA(), do: CA.CMS.decrypt(testRSA(), testPrivateKeyRSA())
+
+def testPrivateKeyRSA() do
+    {:ok,bin} = :file.read_file("priv/rsa-cms.key")
+    pki = :public_key.pem_decode(bin)
+    [{:PrivateKeyInfo,_,_}] = pki
+    rsa = :public_key.pem_entry_decode(hd(pki))
+    {:'RSAPrivateKey',:'two-prime',_n,_e,_d,_,_,_,_,_,_} = rsa
+    {:rsaEncryption,rsa}
+end
+
+def testRSA() do
+    {:ok,x} = :file.read_file "priv/rsa-cms.bin"
+    :'CryptographicMessageSyntax-2010'.decode(:ContentInfo, x)
+end
+\end{lstlisting}
+
+\subsection{KDF}
+
+KDF (MD5: 128, SHA: 160—512) and HKDF (HMAC) Key Derive functions used in ECC CMS schemes as of NIST SP 800-108r1.
+
+\begin{lstlisting}
+defmodule KDF do
+    def hl(:md5),    do: 16
+    def hl(:sha),    do: 20
+    def hl(:sha224), do: 28
+    def hl(:sha256), do: 32
+    def hl(:sha384), do: 48
+    def hl(:sha512), do: 64
+
+    def derive(h, d, len, x) do
+        :binary.part(:lists.foldr(fn i, a ->
+            :crypto.hash(h, d <> <> <> x) <> a
+        end, <<>>, :lists.seq(1,round(Float.ceil(len/hl(h))))), 0, len)
+    end
+end
+\end{lstlisting}
+
+\newpage
+\subsection{AES-KW}
+
+AES Key Wrap function is applicable to keys of 128/192/256 bit using AES-ECB encoding as of RFC 5649:2009 Advanced Encryption Standard (AES) Key Wrap with Padding Algorithm.
+
+\begin{lstlisting}
+-define(MSB64,      1/unsigned-big-integer-unit:64).
+-define(DEFAULT_IV, << 16#A6A6A6A6A6A6A6A6:?MSB64 >>).
+
+unwrap(CipherText, KEK) -> unwrap(CipherText, KEK, ?DEFAULT_IV).
+unwrap(CipherText, KEK, IV)
+        when (byte_size(CipherText) rem 8) =:= 0
+        andalso (bit_size(KEK) =:= 128
+            orelse bit_size(KEK) =:= 192
+            orelse bit_size(KEK) =:= 256) ->
+    BlockCount = (byte_size(CipherText) div 8) - 1,
+    IVSize = byte_size(IV),
+    case do_unwrap(CipherText, 5, BlockCount, KEK) of
+        << IV:IVSize/binary, PlainText/binary >> ->
+            PlainText;
+        _ ->
+            erlang:error({badarg, [CipherText, KEK, IV]})
+    end.
+
+codec(128) -> aes_128_ecb;
+codec(192) -> aes_192_ecb;
+codec(256) -> aes_256_ecb.
+
+do_unwrap(Buffer, J, _BlockCount, _KEK) when J < 0 -> Buffer;
+do_unwrap(Buffer, J, BlockCount, KEK) ->
+    do_unwrap(do_unwrap(Buffer, J, BlockCount, BlockCount, KEK),
+              J - 1, BlockCount, KEK).
+do_unwrap(Buffer, _J, I, _BlockCount, _KEK) when I < 1 -> Buffer;
+do_unwrap(<< A0:?MSB64, Rest/binary >>, J, I, BlockCount, KEK) ->
+    HeadSize = (I - 1) * 8,
+    << Head:HeadSize/binary, B0:8/binary, Tail/binary >> = Rest,
+    Round = (BlockCount * J) + I,
+    A1 = A0 bxor Round,
+    Data = << A1:?MSB64, B0/binary >>,
+    << A2:8/binary, B1/binary >>
+        = crypto:crypto_one_time(codec(bit_size(KEK)),
+          KEK, ?DEFAULT_IV, Data, [{encrypt,false}]),
+    do_unwrap(<< A2/binary, Head/binary, B1/binary,
+          Tail/binary >>, J, I - 1, BlockCount, KEK).
+\end{lstlisting}
+
+\newpage
+\subsection{AES-256}
+
+All AES-256 flavours are implemented for a wide range of ECC Key Agreement schemes.
+
+\begin{lstlisting}
+def decrypt(crypto_codec, data, key, iv \\ :crypto.strong_rand_bytes(16))
+def decrypt(:'id-aes256-ECB',data,key,iv), do: decryptAES256ECB(data,key,iv)
+def decrypt(:'id-aes256-CBC',data,key,iv), do: decryptAES256CBC(data,key,iv)
+def decrypt(:'id-aes256-GCM',data,key,iv), do: decryptAES256GCM(data,key,iv)
+def decrypt(:'id-aes256-CCM',data,key,iv), do: decryptAES256CCM(data,key,iv)
+def test() do
+  [
+    check_SECP384R1_GCM256(),
+    check_X25519_GCM256(),
+    check_C2PNB368w1_GCM256(),
+    check_BrainPoolP512t1_GCM256(),
+    check_BrainPoolP512t1_GCM256(),
+    check_SECT571_GCM256(),
+    check_X448_GCM256(),
+    check_X448_CBC256(),
+    check_X448_ECB256(),
+  ]
+end
+\end{lstlisting}
+
+\newpage
+\section{Імплементація CMP сервера у складі АЦСК}
+
+IETF follow up (PKIX): 7030, 6960, 6818, 6844, 6712, 6664, 6402, 6277, 6170, 6024, 6025, 5934, 5912--5914, 5877, 5816, 5755, 5756, 5758, 5697, 5636, 5480, 5272--5274, 5280, 5055, 5019, 4985, 4683, 4630, 4476, 4387, 4325, 4158, 4210, 4211, 4055, 4043, 3874, 3779, 3820, 3739, 3709, 3628, 3161, 3029, 2797, 2559, 2587, 3039, 3029, 2511, 2510.
+
+Compatibility: OpenSSL, Cisco, Red Hat, Siemens, Nokia, IBM.
+
+Ця стаття могла би називати «Як написати CMP сервер за 30 хвилин»,
+ але на відміну від попередньої статті про LDAP, ця вже покриває більше ніж тузінь ASN.1 файлів, добре шо ми вже познайомилися з CMS та LDAP бібіліотеками та їх ASN.1 файлами. В цій статті про CMP нас в основному цікавитимуть PKIXCMP-2009, PKIXCRMF-2009 та EnrollmentMessageSyntax-2009 для CMC.
+
+\renewcommand{\footnotesize}{\scriptsize}
+
+\begin{lstlisting}
+CMS-AES-CCM-and-AES-GCM-2009.asn1
+CMSAesRsaesOaep-2009.asn1
+CMSECCAlgs-2009-02.asn1
+CMSECDHAlgs-2017.asn1
+CryptographicMessageSyntax-2009.asn1
+CryptographicMessageSyntax-2010.asn1
+CryptographicMessageSyntaxAlgorithms-2009.asn1
+EnrollmentMessageSyntax-2009.asn1
+PKCS-10.asn1
+PKCS-7.asn1
+PKIX1Explicit-2009.asn1
+PKIX1Implicit-2009.asn1
+PKIXAlgs-2009.asn1
+PKIXCMP-2009.asn1
+PKIXCRMF-2009.asn1
+\end{lstlisting}
+
+\newpage
+\subsection{CSR}
+
+Отже починається написання CMP серверу з найголовнішої його функції: видачі сертифікату по PCKS-10 CSR реквесту. Схема наступна: Клієнт генерує приватний ключ, конвертує його в PEM файл, відсилає як P10CR повідомлення у складі payload PKIMessage, отримує відповідь CP, після чого клієнт шле ще одне повідомлення CERTCONF, після якого CMP сервер повинен відповисти PKICONF повідомленням.
+
+
+\begin{lstlisting}
+ def csr(user) do
+      {ca_key, ca} = read_ca()
+      priv = X509.PrivateKey.new_ec(:secp384r1)
+      der = :public_key.der_encode(:ECPrivateKey, priv)
+      pem = :public_key.pem_encode([{:ECPrivateKey, der, :not_encrypted}])
+      :file.write_file(user <> ".key", pem)
+      :io.format '~p~n', [priv]
+      csr = X509.CSR.new(priv, "/C=UA/L=Kyiv/O=SYNRC/CN=" <> user,
+         extension_request: [
+            X509.Certificate.Extension.subject_alt_name(["n2o.dev"])])
+      :io.format 'CSR: ~p~n', [csr]
+      :file.write_file(user <> ".csr", X509.CSR.to_pem(csr))
+      true = X509.CSR.valid?(csr)
+      subject = X509.CSR.subject(csr)
+      :io.format 'Subject ~p~n', [subject]
+      :io.format 'CSR ~p~n', [csr]
+      X509.Certificate.new(X509.CSR.public_key(csr), subject, ca, ca_key,
+         extensions: [subject_alt_name:
+           X509.Certificate.Extension.subject_alt_name(["n2o.dev", "erp.uno"]) ])
+      csr
+  end
+\end{lstlisting}
+
+\newpage
+Перед початком роботи CMP сервера повинен бути згенерований рутовий CA сертифікат з приватним ключем, ці два файла ми зберігаємо на диск, і у всіх подальших операціях користуємося ними. Для генерації файлів використовуємо функцію CA.CSR.ca.
+
+\begin{lstlisting}
+ def ca() do
+      ca_key = X509.PrivateKey.new_ec(:secp384r1)
+      ca = X509.Certificate.self_signed(ca_key,
+            "/C=UA/L=Kyiv/O=SYNRC/CN=CSR-CMP", template: :root_ca)
+      der = :public_key.der_encode(:ECPrivateKey, ca_key)
+      pem = :public_key.pem_encode([{:ECPrivateKey, der, :not_encrypted}])
+      :file.write_file "ca.key", pem
+      :file.write_file "ca.pem", X509.Certificate.to_pem(ca)
+      {ca_key, ca}
+  end
+
+  def read_ca() do
+      {:ok, ca_key_bin} = :file.read_file "ca.key"
+      {:ok, ca_bin} = :file.read_file "ca.pem"
+      {:ok, ca_key} = X509.PrivateKey.from_pem ca_key_bin
+      {:ok, ca} = X509.Certificate.from_pem ca_bin
+      {ca_key, ca}
+  end
+\end{lstlisting}
+
+Для одноразовоїї генерації серверних сертифікатів які обсуговують клієнтські TLS сесії можна використати наступний код.
+
+\begin{lstlisting}
+  def server(name) do
+      {ca_key, ca} = read_ca()
+      server_key = X509.PrivateKey.new_ec(:secp384r1)
+        X509.Certificate.new(X509.PublicKey.derive(server_key),
+           "/C=UA/L=Kyiv/O=SYNRC/CN=" <> name, ca, ca_key,
+           extensions: [subject_alt_name:
+              X509.Certificate.Extension.subject_alt_name(["n2o.dev", "erp.uno"]) ])
+  end
+\end{lstlisting}
+
+\newpage
+\subsection{CMS}
+
+Детально сімейство протоколів і CMS кодування описано в окремій статті присвяченій CMS Compliance. CMS кодування використовується тільки для CMC сервера, тому ми це поки висвітлювати не будемо.
+
+\subsubsection{CMP/CSR/TCP}
+
+RFC 6712, 4210. Для початку напишемо простий PKIMessage сервер.
+
+\begin{lstlisting}
+defmodule CA.CMP do
+  @moduledoc "CA/CMP TCP server."
+  require CA
+
+  def start(), do: :erlang.spawn(fn -> listen(1829) end)
+  def listen(port) do
+      {:ok, socket} = :gen_tcp.listen(port,
+        [:binary, {:packet, 0}, {:active, false}, {:reuseaddr, true}])
+      accept(socket)
+  end
+
+  def accept(socket) do
+      {:ok, fd} = :gen_tcp.accept(socket)
+      :erlang.spawn(fn -> __MODULE__.loop(fd) end)
+      accept(socket)
+  end
+
+  def loop(socket) do
+      case :gen_tcp.recv(socket, 0) do
+           {:ok, data} ->
+               [headers,body] = :string.split data, "\r\n\r\n", :all
+               {:ok,dec} = :'PKIXCMP-2009'.decode(:'PKIMessage', body)
+               {:PKIMessage, header, body, code, _extra} = dec
+               __MODULE__.message(socket, header, body, code)
+               loop(socket)
+          {:error, :closed} -> :exit
+      end
+  end
+\end{lstlisting}
+
+\newpage
+\subsubsection{PKIMessage.protection}
+
+Розберемося з полем PKIMessage.protection, в якому зберігається результат PBKDF2 алгоритма. Майте на увазі шо OpenSSL за замовчування використовує 20-байтні ключі та HMAC/SHA-1 у якості MAC функції, хоча OWF в 500 ітераціях обчислюється за допомогою OWF функції SHA-256.
+
+\subsubsection{ANSWER}
+
+Оскільки CMP сервер повинен працювати по HTTP/1.0 згідно стандартів додаємо необхідні HTTP заголовки.
+
+\begin{lstlisting}
+ def answer(socket, header, body, code) do
+      message = CA."PKIMessage"(header: header, body: body, protection: code)
+      {:ok, bytes} = :'PKIXCMP-2009'.encode(:'PKIMessage', message)
+      res =  "HTTP/1.0 200 OK\r\n"
+          <> "Server: SYNRC CA/CMP\r\n"
+          <> "Content-Type: application/pkixcmp\r\n\r\n"
+          <> :erlang.iolist_to_binary(bytes)
+      :gen_tcp.send(socket, res)
+  end
+\end{lstlisting}
+
+\subsubsection{P10CR/CP}
+
+Запускаємо сервер та генеруємо сертифікати CA та CSR користувача:
+
+\begin{lstlisting}
+$ mix deps.get
+$ iex -S mix
+> CA.CSR.ca
+> CA.CSR.csr "maxim"
+\end{lstlisting}
+
+Запускаємо клієнтський запит за допомогою OpenSSL:
+
+\begin{lstlisting}
+# openssl cmp -cmd p10cr -server localhost:1829 \
+#             -path . -srvcert ca.pem -ref cmptestp10cr \
+#             -secret pass:0000 -certout $client.pem -csr $client.csr
+\end{lstlisting}
+
+\newpage
+Пишемо функцію видачі сертифікату:
+
+\begin{lstlisting}
+def message(socket, header, {:p10cr, csr} = body, code) do
+      {:PKIHeader, pvno, from, to, messageTime, protectionAlg,
+         _senderKID, _recipKID, transactionID, senderNonce,
+         _recipNonce, _freeText, _generalInfo} = header
+      true = code == validateProtection(header, body, code)
+
+      {ca_key, ca} = CA.CSR.read_ca()
+      subject = X509.CSR.subject(csr)
+      :io.format '~p~n',[subject]
+      true = X509.CSR.valid?(CA.parseSubj(csr))
+      cert = X509.Certificate.new(X509.CSR.public_key(csr),
+         CA.CAdES.subj(subject), ca, ca_key,
+         extensions: [subject_alt_name:
+            X509.Certificate.Extension.subject_alt_name(["synrc.com"]) ])
+
+      reply = CA."CertRepMessage"(response:
+            [ CA."CertResponse"(certReqId: 0,
+              certifiedKeyPair: CA."CertifiedKeyPair"(certOrEncCert:
+                {:certificate, {:x509v3PKCert, CA.convertOTPtoPKIX(cert)}}),
+              status: CA."PKIStatusInfo"(status: 0))])
+
+      pkibody = {:cp, reply}
+      pkiheader = CA."PKIHeader"(sender: to, recipient: from, pvno: pvno,
+          recipNonce: senderNonce, transactionID: transactionID,
+          protectionAlg: protectionAlg, messageTime: messageTime)
+      answer(socket, pkiheader, pkibody,
+          validateProtection(pkiheader, pkibody, code))
+  end
+\end{lstlisting}
+
+\newpage
+\subsubsection{CERTCONF/PKICONF}
+
+\begin{lstlisting}
+def message(socket, header, {:certConf, statuses}, code) do
+      {:PKIHeader, _, from, to, _, _, _, _, _, senderNonce, _, _, _} = header
+
+      :lists.map(fn {:CertStatus,bin,no,{:PKIStatusInfo, :accepted, _, _}} ->
+          :logger.info 'CERTCONF ~p request ~p~n', [no,:binary.part(bin,0,8)]
+      end, statuses)
+
+      pkibody = {:pkiconf, :asn1_NOVALUE}
+      pkiheader = CA."PKIHeader"(header, sender: to, recipient: from,
+          recipNonce: senderNonce)
+      answer(socket, pkiheader, pkibody,
+          validateProtection(pkiheader, pkibody, code))
+  end
+\end{lstlisting}
+
+В результаті в консолі повинні спостерігати:
+
+\begin{lstlisting}
+CMP info: sending P10CR
+CMP info: received CP
+CMP info: sending CERTCONF
+CMP info: received PKICONF
+CMP info: received 1 enrolled certificate(s), saving to file 'maxim.pem'
+\end{lstlisting}
+
+\subsubsection{GENM/GENP}
+
+Далі можете написати інші функції:
+
+\begin{lstlisting}
+# openssl cmp -cmd genm -server 127.0.0.1:1829 \
+#             -recipient "/CN=CMPserver" -ref 1234 -secret pass:0000
+\end{lstlisting}
+
+\begin{lstlisting}
+def message(_socket, _header, {:genm, req} = _body, _code) do
+      :io.format 'generalMessage: ~p~n', [req]
+  end
+\end{lstlisting}
+
+\newpage
+\subsubsection{IR/IP}
+
+\begin{lstlisting}
+# openssl cmp -cmd ir -server 127.0.0.1:1829 \
+#             -path . -srvcert ca.pem -ref NewUser \
+#             -secret pass:0000 -certout maxim.pem \
+#             -newkey maxim.key -subject "/CN=maxim/O=SYNRC/ST=Kyiv/C=UA"
+\end{lstlisting}
+
+\begin{lstlisting}
+ def message(_socket, _header, {:ir, req}, _) do
+      :lists.map(fn {:CertReqMsg, req, sig, code} ->
+         :io.format 'request: ~p~n', [req]
+         :io.format 'signature: ~p~n', [sig]
+         :io.format 'code: ~p~n', [code]
+      end, req)
+  end
+\end{lstlisting}
+
+\subsubsection{CR/CP}
+
+\begin{lstlisting}
+# openssl cmp -cmd cr -server 127.0.0.1:1829 \
+#             -path . -srvcert ca.pem -ref NewUser \
+#             -secret pass:0000 -certout maxim.pem \
+#             -newkey maxim.key -subject "/CN=maxim/O=SYNRC/ST=Kyiv/C=UA"
+\end{lstlisting}
+
+\newpage
+\subsubsection{Висновки}
+
+\begin{lstlisting}
+defmodule CA do
+  use Application
+  use Supervisor
+
+  require Record
+  Enum.each(Record.extract_all(from_lib: "ca/include/PKIXCMP-2009.hrl"),
+            fn {name, definition} -> Record.defrecord(name, definition) end)
+
+  Enum.each(Record.extract_all(from_lib: "public_key/include/public_key.hrl"),
+            fn {name, definition} -> Record.defrecord(name, definition) end)
+
+  def init([]), do: {:ok, { {:one_for_one, 5, 10}, []} }
+  def start(_type, _args) do
+      :logger.add_handlers(:ldap)
+      CA.CMP.start
+      CA.CMC.start
+      :supervisor.start_link({:local, __MODULE__}, __MODULE__, [])
+  end
+\end{lstlisting}
+
+Ну PasswordBasedMac в нас є, тепер треба DHMac, але shared secret можна і в PBM засунути. Є ше Proof Of Posession (POP) — там зразу ECDSA verify. Я до речі думаю в CA тримати ключі для всіх кривих, і коли я виставлятиму сервіс то я буду виставляти його на N портах і N ключах, щоб будь який клієнтський TLS сертифікат приймався як рідний! Chat 💬 X.509 дає можливість вибирати TLS сертифікати автоматично по обраних кривих. Ви вибираєте під якими ключами сьогодні заходити. LDAP, MQTT, NS, CA — в кожного сервісу свої N портів і N серверних TLS сертифікатів. Передбачається що перший сертифікат видається DH по TCP а потім зразу всьо переходить в TLS режим і всі наступні сертифікати вже видаються всередині клієнтського TLS. При реєстрації користувач зразу доступний в LDAP якшо захотів зробити себе відкритим для пошуку. Після реєстрації пошук в директорії і френдування (обмін ключами) і поїхали чат в обгортках CAdES, CMS, ECDSA/AES — лейби біля повідомлень ПІДПИС/ШИФР.
+
+\section{Центри сертифікації CA, АЦСК, ЦЗО та ОЗО}
 
 \section{Безпечна система доменних імен DNSSEC}
 
