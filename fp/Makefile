@@ -1,5 +1,5 @@
 default:
-	(xelatex --interaction nonstopmode ffj.tex)
+	(xelatex --interaction nonstopmode fp.tex)
 
 clean:
 	rm -f *.toc
