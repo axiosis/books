@@ -771,14 +771,11 @@ data W (lang: U) =
    | W_Ind (a b c: lang)
 
 data 2 (lang: U) =
-   | 2_bool
-   | 2_true
-   | 2_false
+   | 2_bool | 2_true | 2_false
    | 2_Ind (a: lang)
 
 data 1 (lang: U) =
-   | 1_unit
-   | 1_star
+   | 1_unit | 1_star
    | 1_Ind (a: lang)
 
 data 0 (lang: U) =
