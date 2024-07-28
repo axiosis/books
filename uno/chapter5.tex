@@ -528,6 +528,7 @@ data ind (lang: U)
    | ctor   (n: name)                (args:     list lang)
 \end{lstlisting}
 
+\newpage
 \subsection{Поліноміальні функтори}
 Існує два види формальної рекурсії: 1) перша з найменшою нерухомою точкою
 (як $F_A(X) = 1 + A \times X$ або $F_A(X) = A + X \times X$), іншими словами
@@ -545,7 +546,7 @@ data ind (lang: U)
 Лямбда числення: $\mu\ X \rightarrow 1 + X \times X + X$\\
 Потоки: $\nu\ X \rightarrow A \times X$\\
 Потенційно нескінченний список елементів A: $\nu\ X \rightarrow 1 + A \times X$\\
-Кінцеве дерево: $\mu\ X \rightarrow \mu\ Y \rightarrow 1 + X \times Y = \mu\ X = List\ X$\\
+Скінченне дерево: $\mu\ X \rightarrow \mu\ Y \rightarrow 1 + X \times Y = \mu\ X = List\ X$\\
 
 Для цих кодувань існує аналог кодування Чорча, який розповсюджує
 кодування чистими функціями з нетипизованого лямбда числення до $\Pi$-типу.
@@ -558,7 +559,7 @@ J елімінатор Id типу закодованого в Бом кодув
 елімінатори гомотопічних примітивів, наприклад елімінатори гомотопічного
 візрізка як \lstinline{funExt}, \lstinline{homotopy}.
 
-\subsection{Кодування Бома}
+\newpage\subsection{Кодування Бома}
 Тип даних List над даним типом А, може бути представлений як ініціальні алгебра
 $(\mu L_A, in)$ функтору $L_A(X) = 1 + (A \times X)$. Позначається $\mu L_A = List(A)$.
 Функції-конструктори $nil: 1 \rightarrow List(A)$ та
@@ -621,7 +622,7 @@ foldl = \lambda\ f\ v\ xs = foldr\ (\lambda\ xg\rightarrow\ (\lambda \rightarrow
 \end{cases}
 $$
 
-\subsection{Операційна семантика}
+\newpage\subsection{Операційна семантика}
 Традиційно індуктивні типи входять в операційну семантику систем побудованих
 та основі MLTT-80 (таких як кубічні системи, або система HTS).
 Оригінально Мартін-Льоф виразив індуктивні дерева через $W$-типи, для яких
@@ -747,6 +748,7 @@ data hts (lang: U)
    | unglue-1 (a b: lang)
 \end{lstlisting}
 
+\newpage
 \section{Структура верифікатора}
 
 На відміну від одноаксіоматичного верифікатора $\mathbf{Henk}$,
