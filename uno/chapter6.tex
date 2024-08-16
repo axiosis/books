@@ -305,41 +305,6 @@ Eta (A:U) (B:A->U) (a:A) (f: Pi A B)
 \end{lstlisting}
 \end{theorem}
 
-\subsubsection*{Категоріальна інтерпретація}
-The adjoints $\Pi$ and $\Sigma$ is not the only adjoints could be presented in type system.
-Axiomatic cohesions could contain a set of adjoint pairs as a core type checker operations.
-
-\begin{definition} (Залежний добуток).
-The dependent product along morphism $g: B \rightarrow A$ in category $C$ is the right
-adjoint $\Pi_g : C_{/B} \rightarrow C_{/A}$ of the base change functor.
-\end{definition}
-
-\begin{definition} (Простір шарів розшарувань).
-Let $\mathbf{H}$ be a $(\infty,1)$-topos, and let $E \rightarrow B : \mathbf{H}_{/B}$ a bundle in
-$\mathbf{H}$, object in the slice topos. Then the space of sections $\Gamma_\Sigma(E)$
-of this bundle is the Dependent Product:
-$$ \Gamma_\Sigma(E) = \Pi_\Sigma (E) \in \mathbf{H}. $$
-\end{definition}
-
-\begin{theorem} (Множина морфізмів).
-If codomain is set then space of sections is a set.
-\begin{lstlisting}
-setFun (A B : U) (_: isSet B) : isSet (A -> B)
-\end{lstlisting}
-\end{theorem}
-
-\begin{theorem} (Стягуваність).
-If domain and codomain is contractible then the space of sections is contractible.
-\begin{lstlisting}
-piIsContr (A: U) (B: A -> U) (u: isContr A)
-          (q: (x: A) -> isContr (B x)) : isContr (Pi A B)
-\end{lstlisting}
-\end{theorem}
-
-\begin{definition} (Шар розшарування).
-A section of morphism $f: A \rightarrow B$ in some category is the morphism $g: B \rightarrow A$
-such that $f \circ g: B \mapright{g} A \mapright{f} B$ equals the identity morphism on B.
-\end{definition}
 
 \subsubsection*{Гомотопічна інтерпретація}
 Геометрично, $\Pi$-тип — це простір секцій, у той час коли кодомен — це простір розшарувань.
@@ -411,6 +376,42 @@ FiberPi (B: U) (F: B -> U) (y: B)
 %      (p q: Path (Pi A B) f g) : Path (Path (Pi A B) f g) p q
 %\end{lstlisting}
 %\end{theorem}
+
+\subsubsection*{Категоріальна інтерпретація}
+The adjoints $\Pi$ and $\Sigma$ is not the only adjoints could be presented in type system.
+Axiomatic cohesions could contain a set of adjoint pairs as a core type checker operations.
+
+\begin{definition} (Залежний добуток).
+The dependent product along morphism $g: B \rightarrow A$ in category $C$ is the right
+adjoint $\Pi_g : C_{/B} \rightarrow C_{/A}$ of the base change functor.
+\end{definition}
+
+\begin{definition} (Простір шарів розшарувань).
+Let $\mathbf{H}$ be a $(\infty,1)$-topos, and let $E \rightarrow B : \mathbf{H}_{/B}$ a bundle in
+$\mathbf{H}$, object in the slice topos. Then the space of sections $\Gamma_\Sigma(E)$
+of this bundle is the Dependent Product:
+$$ \Gamma_\Sigma(E) = \Pi_\Sigma (E) \in \mathbf{H}. $$
+\end{definition}
+
+\begin{theorem} (Множина морфізмів).
+If codomain is set then space of sections is a set.
+\begin{lstlisting}
+setFun (A B : U) (_: isSet B) : isSet (A -> B)
+\end{lstlisting}
+\end{theorem}
+
+\begin{theorem} (Стягуваність).
+If domain and codomain is contractible then the space of sections is contractible.
+\begin{lstlisting}
+piIsContr (A: U) (B: A -> U) (u: isContr A)
+          (q: (x: A) -> isContr (B x)) : isContr (Pi A B)
+\end{lstlisting}
+\end{theorem}
+
+\begin{definition} (Шар розшарування).
+A section of morphism $f: A \rightarrow B$ in some category is the morphism $g: B \rightarrow A$
+such that $f \circ g: B \mapright{g} A \mapright{f} B$ equals the identity morphism on B.
+\end{definition}
 
 \newpage
 \subsubsection{$\Sigma$-тип}
