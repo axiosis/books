@@ -147,6 +147,7 @@ $\mathbf{Anders}$, які використовуються в диференці
 --- Теорія гомотопій \\
 --- Теорія категорій \\
 
+\newpage
 \subsubsection{Програми}
 
 Третя частини базової бібліотеки, присутня у мовах $\mathbf{Per}$ та $\mathbf{Anders}$,
@@ -160,7 +161,6 @@ $\mathbf{Anders}$, які використовуються в диференці
 --- Формалізація реляційної бази даних \\
 --- Формалізація системи управління процесами \\
 
-\newpage
 \subsubsection{Філософії}
 
 З сучасників формальною філософією в HoTT загалом займається Девід Корфілд,
@@ -245,6 +245,7 @@ Id типу виконується строго. Однак в гомотопі�
 Групоїдна інтерпретація теорії типів розкриває цю мотивацію та необхідність яка
 була показано Мартіном Хофманом та Томасом Стрейхером в 1996.
 
+\newpage
 \subsection{Типи Π, Σ, Path}
 
 \subsubsection{$\Pi$-тип}
@@ -341,19 +342,19 @@ such that $f \circ g: B \mapright{g} A \mapright{f} B$ equals the identity morph
 \end{definition}
 
 \subsubsection*{Гомотопічна інтерпретація}
-Geometrically, $\Pi$ type is a space of sections, while the dependent codomain is a space of fibrations.
-Lambda functions are sections or points in these spaces, while the function result is a fibration.
-$\Pi$ type also represents the cartesian family of sets, generalizing the cartesian product of sets.
+Геометрично, $\Pi$-тип — це простір секцій, у той час коли кодомен — це простір розшарувань.
+Лямбда-функції — це простір секцій, або точки в цих просторах, у той час, коли результат функції — це розшарування.
+$\Pi$-тип також репрезентує декартовий добуток сімʼї множин, узагальнюючи звичайний декартовий добуток множин.
 
 \begin{definition} (Розшарування).
-The fiber of the map $p: E \rightarrow B$ in a point $y: B$ is all points $x: E$ such that $p(x)=y$.
+Розшарування відображення $p: E \rightarrow B$ у точку $y: B$ є всіма точками $x: E$, такими, що $p(x)=y$.
 \end{definition}
 
 \begin{definition} (Пучок розрашувань).
-The fiber bundle $ F \rightarrow E \mapright{p} B$ on a total space $E$ with fiber layer $F$ and base $B$ is a
-structure $(F,E,p,B)$ where $p: E \rightarrow B$ is a surjective map with following property:
-for any point $y: B$ exists a neighborhood $U_b$ for which a homeomorphism $f: p^{-1}(U_b) \rightarrow U_b \times F$
-making the following diagram commute.
+Пучок розшарувань $ F \rightarrow E \mapright{p} B$ над тотальним простором $E$ з розшаруванням $F$ і базою $B$ — це
+структура $(F,E,p,B)$, де $p: E \rightarrow B$ — це сурʼєктивне відображення з наступними властивостями:
+для будь-якої точки $y: B$ існує окіл $U_b$ для якого гомеоморфізм $f: p^{-1}(U_b) \rightarrow U_b \times F$
+робить наступну діаграму комутативною.
 \begin{center}
 \begin{tikzpicture}
   \matrix (m) [matrix of math nodes,row sep=3em,column sep=3em,minimum width=2em]
@@ -369,29 +370,29 @@ making the following diagram commute.
 \end{definition}
 
 \begin{definition} (Декартовий добуток сімейства над B).
-Is a set $F$ of sections of the bundle with elimination map $app : F \times B \rightarrow E$ such that
+Декартовй добуток $F$ над сімейством $B$ — це розшарування секцій пучка з елімінюючим відображенням $app : F \times B \rightarrow E$, таким, що
 \begin{equation}
 F \times B \mapright{app} E \mapright{pr_1} B
 \end{equation}
-$pr_1$ is a product projection, so $pr_1$, $app$ are morphisms
-of slice category $Set_{/B}$. The universal mapping property of $F$:
-for all $A$ and morphism $A \times B \rightarrow E$ in $Set_{/B}$ exists
-unique map $A \rightarrow F$ such that everything commute. So a category
-with all dependent products is necessarily a category with all pullbacks.
+$pr_1$ — це перша проекція добутка, таким чином $pr_1$, $app$ — це морфізми
+слайс категорії $Set_{/B}$. Універсальна властивість відображень розшарування $F$:
+для всіх $A$ і морфізму $A \times B \rightarrow E$ в $Set_{/B}$ існує
+унікальне відображення $A \rightarrow F$, таке, що робить все комутуючим.
+Таким чином, категорія з залежними добутками — це категорія зі всіма пулбеками.
 \end{definition}
 
 \begin{definition} (Тривіальний пучок розшарувань).
-When total space $E$ is cartesian product $\Sigma(B,F)$ and $p = pr_1$
-then such bundle is called trivial $(F,\Sigma(B,F),pr_1,B)$.
+Коли тотальний простір $E$ є декартовим добутком $\Sigma(B,F)$ і $p = pr_1$,
+тоді такий пучок розшарувань називається тривіальним $(F,\Sigma(B,F),pr_1,B)$.
 \end{definition}
 
-\begin{theorem} (Functions Preserve Paths).
-For a function $f: (x:A) \rightarrow B(x)$
-there is an $ap_f : x =_A y \rightarrow f(x) =_{B(x)} f(y)$. This is called
-application of $f$ to path or congruence property (for non-dependent case ---
-$cong$ function). This property behaves functoriality
-as if paths are groupoid morphisms and types are objects.
-\end{theorem}
+% \begin{theorem} (Functions Preserve Paths).
+% For a function $f: (x:A) \rightarrow B(x)$
+% there is an $ap_f : x =_A y \rightarrow f(x) =_{B(x)} f(y)$. This is called
+% a pplication of $f$ to path or congruence property (for non-dependent case ---
+% $cong$ function). This property behaves functoriality
+% as if paths are groupoid morphisms and types are objects.
+% \end{theorem}
 
 \begin{theorem} (Тривіальний пучок розшарувань дорівнює сімейству множин).
 Inverse image (fiber) of fiber bundle $(F,B*F,pr_1,B)$ in point $y:B$ equals $F(y)$.
@@ -401,16 +402,17 @@ FiberPi (B: U) (F: B -> U) (y: B)
 \end{lstlisting}
 \end{theorem}
 
-\begin{theorem} (Гомотопічна еквівалентність).
-If fiber space is set for all base, and
-there are two functions $f,g : (x:A) \rightarrow B(x)$ and two
-homotopies between them, then these homotopies are equal.
-\begin{lstlisting}
-setPi (A: U) (B: A -> U) (h: (x: A) -> isSet (B x)) (f g: Pi A B)
-      (p q: Path (Pi A B) f g) : Path (Path (Pi A B) f g) p q
-\end{lstlisting}
-\end{theorem}
+%\begin{theorem} (Гомотопічна еквівалентність).
+%If fiber space is set for all base, and
+%there are two functions $f,g : (x:A) \rightarrow B(x)$ and two
+%homotopies between them, then these homotopies are equal.
+%\begin{lstlisting}
+%setPi (A: U) (B: A -> U) (h: (x: A) -> isSet (B x)) (f g: Pi A B)
+%      (p q: Path (Pi A B) f g) : Path (Path (Pi A B) f g) p q
+%\end{lstlisting}
+%\end{theorem}
 
+\newpage
 \subsubsection{$\Sigma$-тип}
 $\Sigma$ is a dependent sum type, the generalization of products.
 $\Sigma$ type is a total space of fibration. Element of total
@@ -510,6 +512,7 @@ pathSig (A:U) (B : A -> U) (t u : Sigma A B)
 \end{lstlisting}
 \end{theorem}
 
+\newpage
 \subsubsection{Path-тип}
 The Path identity type defines a Path space with elements and values.
 Elements of that space are functions from interval $[0,1]$ to a values of that path space.
@@ -644,6 +647,7 @@ trans (A B: U) (p: Path U A B) (a: A) : B
 \end{lstlisting}
 \end{theorem}
 
+\newpage
 \subsubsection{Теоретико-типова інтерпретація}
 
 \begin{definition} (Сінглтон).
@@ -716,6 +720,7 @@ J_comp (A: U) (a: A) (C: (x: A) -> Path A a x -> U) (d: C a (refl A a))
 
 Note that  Path type has no Eta rule due to groupoid interpretation.
 
+\newpage
 \subsubsection{Групоїдна інтерпретація}
 
 The groupoid interpretation of type theory is well known article by Martin Hoffman and Thomas Streicher,
@@ -814,6 +819,7 @@ $$
 $$
 \end{definition}
 
+\newpage
 \subsection{Інтерналізація}
 
 Here is given formal model of type-theoretical interpretation of Martin-Löf Type Theory.
@@ -877,6 +883,7 @@ TYPE: Π (A : U), Σ (Π-form : Π (B : (A → U)), U), Σ (Π-ctor₁ : Π (B :
 NORMEVAL: λ (A : U), (λ (B : (A → U)), Π (x : A), (B x), (λ (B : (A → U)), λ (b : Π (x : A), (B x)), λ (x : A), (b x), (λ (B : (A → U)), λ (f : Π (x : A), (B x)), λ (a : A), (f a), (λ (B : (A → U)), λ (a : A), λ (f : Π (x : A), (B x)), λ (P : ((B a) → U)), λ (u : (P (f a))), u, (λ (B : (A → U)), λ (a : A), λ (f : Π (x : A), (B x)), λ (P : (Π (x : A), (B x) → U)), λ (u : (P f)), u, (λ (B : (A → U)), Σ (x : A), (B x), (λ (B : (A → U)), λ (a : A), λ (b : (B a)), (a, b), (λ (B : (A → U)), λ (x : Σ (x : A), (B x)), x.1, (λ (B : (A → U)), λ (x : Σ (x : A), (B x)), x.2, (λ (B : (A → U)), λ (a : A), λ (b : (B a)), λ (P : (A → U)), λ (u : (P a)), u, (λ (B : (A → U)), λ (a : A), λ (b : (B a)), λ (P : ((B a) → U)), λ (u : (P b)), u, (λ (B : (A → U)), λ (p : Σ (x : A), (B x)), λ (P : (Σ (x : A), (B x) → U)), λ (u : (P p)), u, (λ (x : A), λ (y : A), Π (P : (A → U)), ((P x) → (P y)), (λ (x : A), λ (P : (A → U)), λ (u : (P x)), u, ((J A), ((comp₆ A), A))))))))))))))))
 \end{lstlisting}
 
+\newpage
 \section{Індуктивні типи}
 
 \subsection{Empty, Unit}
@@ -895,6 +902,7 @@ unitRec (C: U) (x: C): unit -> C = split tt -> x
 unitInd (C: unit -> U) (x: C tt): (z: unit) -> C z = split tt -> x
 \end{lstlisting}
 
+\newpage
 \subsection{Bool, Maybe, Either, Tuple}
 
 \begin{definition} (Bool).
@@ -956,6 +964,7 @@ tupleInd  (A B: U) (C: tuple A B -> U)
         = split pair a b -> c a b
 \end{lstlisting}
 
+\newpage
 \subsection{Nat, List, Stream}
 Pointed Unary System is a category nat with the terminal
 object and a carrier nat having morphism [zero: 1nat → nat, succ: nat → nat].
