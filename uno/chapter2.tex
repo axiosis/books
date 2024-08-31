@@ -543,9 +543,11 @@ $O_\lambda$, $O_\pi$, $O_\mu$.
 
 \begin{definition} (Синтаксис мовної категорії $O_{CPS}$).
 \begin{lstlisting}
-data CPS = lambda (_: church CPS)
-         | process (_: milner CPS)
-         | tensor (_: futhark CPS)
+def CPS : U
+ := inductive { lambda (c: church CPS)
+              | process (m: milner CPS)
+              | tensor (f: futhark CPS)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -569,9 +571,11 @@ $$
 своїм трьома конструкторами: номер змінної (індекс де Брейна),
 лямбда функція та її апплікація:
 \begin{lstlisting}
-data church = var (x: nat)
-            | lam (l: nat) (d: cps)
-            | app (f a: cps)
+def church (cps: U): U
+ := inductive { var (x: nat)
+              | lam (l: nat) (d: cps)
+              | app (f a: cps)
+              }
 \end{lstlisting}
 Мовою інтерпретаторів є нетипизоване лямбда числення, однак в залежності
 від складності інтерпретатора це дерево може виглядати по-різному.
@@ -586,28 +590,30 @@ data church = var (x: nat)
 \begin{definition} (Синтаксичне дерево $O_\pi$).
 Правило формації, конструктора та елімінатора визначається синтаксичним деревом $O_*$:
 \begin{lstlisting}
-data milner (lang: U)
-   = process (protocol: lang)
-   | spawn (cursors: lang) (core: nat) (program: lang)
-   | snd (cursor: lang) (data: lang)
-   | rcv (cursor: lang)
-   | pub (size: nat)
-   | sub (cursor: lang)
+def milner (lang: U) : U
+ := inductive { process (protocol: lang)
+              | spawn (cursors: lang) (core: nat) (program: lang)
+              | snd (cursor: lang) (data: lang)
+              | rcv (cursor: lang)
+              | pub (size: nat)
+              | sub (cursor: lang)
+              }
 \end{lstlisting}
 \end{definition}
 
 \begin{definition} (Синтаксичне дерево $O_\mu$).
 \begin{lstlisting}
-data futhark (lang: U)
-   = iota (cursor: lang)
-   | map (cursor: lang)
-   | fold (size: nat)
-   | scan (cursor: lang)
-   | for (cursor: lang)
-   | while (cursor: lang)
-   | concat (cursor: lang)
-   | zip (cursor: lang)
-   | transpose (cursor: lang)
+def futhark (lang: U) : U
+ := inductive { iota (cursor: lang)
+              | map (cursor: lang)
+              | fold (size: nat)
+              | scan (cursor: lang)
+              | for (cursor: lang)
+              | while (cursor: lang)
+              | concat (cursor: lang)
+              | zip (cursor: lang)
+              | transpose (cursor: lang)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -655,7 +661,7 @@ certify: X \rightarrow target = type \circ norm \circ extract
 Чиста мова $O_{PTS}$ містить лише синтаксис одного типу, $\Pi$-типу.
 Така теорія називається теорією з одним типом, або з однією аксіомою.
 \begin{lstlisting}
-data PTS = forall (_: Forall PTS)
+def PTS : U := inductive { forall (_: Forall PTS) }
 \end{lstlisting}
 \end{definition}
 
@@ -664,12 +670,13 @@ Pure Type System (Барендрехт, Меєр, Гонзалез, Стемп, 
 
 \begin{definition} (Синтаксичне дерево $O_\Pi$).
 \begin{lstlisting}[mathescape=true]
-data Forall (lang: U)
-   = fibrant (n: nat)
-   | variable (x: name) (l: nat)
-   | pi (x: name) (l: nat) (f: lang)
-   | lambda  (x: name) (l: nat) (f: lang)
-   | application (f a: lang)
+def Forall (lang: U) : U
+ := inductive { fibrant (n: nat)
+              | variable (x: name) (l: nat)
+              | pi (x: name) (l: nat) (f: lang)
+              | lambda  (x: name) (l: nat) (f: lang)
+              | application (f a: lang)
+              }
 \end{lstlisting}
 \end{definition}
 
