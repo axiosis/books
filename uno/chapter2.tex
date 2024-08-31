@@ -936,12 +936,13 @@ $O_{HTS}$ містить два Id-типа, один унаслідований
 AXIO/1 складається з середовища виконання та його мов Joe, Alice, Bob для розробки системного
 програмного забезпечення, які використовують стандартний синтаксис ML; і більш високі
 мови та їх екстрактори для виконання Alonzo, Henk, Per, Anders для доведення теорем,
-які використовують Lean-подібний синтаксис.
+які використовують Lean-подібний синтаксис. Неверифікований CPS інтерпретатор реалізований
+на мові Rust.
 
 \subsection*{Інтерпретатори і системні мови}
 
-Перевірений лямбда-інтерпретатор і паралельне виконання матриць. Мови Joe,
-Bob і Alice мають однакову стандартну ML, як граматику BNF.
+Верифікований лямбда-інтерпретатор і паралельне обчислення матриць. Мови Joe,
+Bob і Alice мають уніфікований синтаксис Standard ML.
 
 \subsection*{Joe}
 
@@ -998,6 +999,8 @@ fun simpleConvolution (i n: int) (x0: float) (write w: vector float)
 
 \newpage
 \subsection*{Чисті фібраційні мови програмування (вищих порядків)}
+
+Чисті фібраційні мови мають уніфікований синтаксис Lean-подібної мови.
 
 \subsection*{Alonso}
 
@@ -1068,24 +1071,24 @@ Anders — це система гомотопічних типів (HTS-2013) і
 [6] ВМА-2017 — Кубічна Агда.
 
 \begin{lstlisting}
-def idfun  (A : U) : A → A := λ (a : A), a
-def idfun′ (A : U) : A → A := transp (<i> A) 0
-def idfun″ (A : U) : A → A := λ (a : A), hcomp A 0 (λ (i : I), []) a
-def isFiberBundle (B: U) (p: B → U) (F: U): U
+def idfun  (A : U) : A $\rightarrow$ A := ($\lambda$ (a : A), a
+def idfun' (A : U) : A $\rightarrow$ A := transp (<i> A) 0
+def idfun'' (A : U) : A $\rightarrow$ A := ($\lambda$ (a : A), hcomp A 0 ($\lambda$ (i : I), []) a
+def isFiberBundle (B: U) (p: B $\rightarrow$ U) (F: U): U
  := Σ (v: U) (w: surjective v B), (Π (x: v), PathP (<_>U) (p (w.1 x)) F)
-def ~~ (X : U) (a x′ : X) : U := Path (ℑ X) (ι X a) (ι X x′)
-def 𝔻 (X : U) (a : X) : U := Σ (x′ : X), ~~ X a x′
-def unitDisc (X : U) (x : ℑ X) : U := Σ (x′ : X), Path (ℑ X) x (ι X x′)
-def starDisc (X : U) (x : X) : 𝔻 X x := (x, idp (ℑ X) (ι X x))
-def T∞ (A : U) : U := Σ (a : A), 𝔻 A a
-def inf-prox-ap (X Y : U) (f : X → Y) (x x′ : X) (p : ~~ X x x′)
-  : ~~ Y (f x) (f x′) := <i> ℑ-app X Y f (p @ i)
-def d (X Y : U) (f : X → Y) (x : X) (ε : 𝔻 X x) : 𝔻 Y (f x)
- := (f ε.1, inf-prox-ap X Y f x ε.1 ε.2)
-def T∞-map (X Y : U) (f : X → Y) (τ : T∞ X) : T∞ Y
- := (f τ.1, d X Y f τ.1 τ.2)
+def ~~ (X : U) (a x' : X) : U := Path ($\Im$ X) ($\iota$ X a) ($\iota$ X x')
+def $\mathbb{D}$ (X : U) (a : X) : U := Σ (x′ : X), ~~ X a x'
+def unitDisc (X : U) (x : $\Im$ X) : U := Σ (x' : X), Path ($\Im$ X) x ($\iota$ X x')
+def starDisc (X : U) (x : X) : $\mathbb{D}$ X x := (x, idp ($\Im$ X) ($\iota$ X x))
+def T$^\infty$ (A : U) : U := Σ (a : A), $\mathbb{D}$ A a
+def inf-prox-ap (X Y : U) (f : X $\rightarrow$ Y) (x x' : X) (p : ~~ X x x')
+  : ~~ Y (f x) (f x') := <i> $\Im$-app X Y f (p @ i)
+def d (X Y : U) (f : X $\rightarrow$ Y) (x : X) ($\epsilon$ : $\mathbb{D}$ X x) : $\mathbb{D}$ Y (f x)
+ := (f $\epsilon$.1, inf-prox-ap X Y f x $\epsilon$.1 $\epsilon$.2)
+def T$^\infty$-map (X Y : U) (f : X $\rightarrow$ Y) ($\tau$ : T$^\infty$ X) : T$^\infty$ Y
+ := (f $\tau$.1, d X Y f $\tau$.1 $\tau$.2)
 def is-homogeneous (A : U)
- := Σ (e : A) (t : A → equiv A A),
+ := Σ (e : A) (t : A $\rightarrow$ equiv A A),
     Π (x : A), Path A ((t x).1 e) x
 \end{lstlisting}
 
