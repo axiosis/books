@@ -705,10 +705,11 @@ certify: Ob \rightarrow Ob = type \circ norm
 Мова $O_{MLTT-75}$ включає в себе синтаксиси трьох типів
 теорії Мартіна-Льофа: $O_\Pi$, $O_\Sigma$, $O_=$.
 \begin{lstlisting}
-data MLTT
-   = forall (_: Forall MLTT)
-   | sigma (_: Sigma MLTT)
-   | id (_: Id MLTT)
+def MLTT : U
+ := inductive { forall (_: Forall MLTT)
+              | sigma (_: Sigma MLTT)
+              | id (_: Id MLTT)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -716,11 +717,12 @@ data MLTT
 Також можна до чистої системи додати $\Sigma$-тип,
 піднявши типову систему до мови $O_{MLTT-72}$ або $O_{\Pi\Sigma}$ :
 \begin{lstlisting}[mathescape=true]
-data Sigma (lang: U)
-   = sigma (n: name) (a b: lang)
-   | pair (a b: lang)
-   | fst (p: lang)
-   | snd (p: lang)
+def Sigma (lang: U) : U
+ := inductive { sigma (n: name) (a b: lang)
+              | pair (a b: lang)
+              | fst (p: lang)
+              | snd (p: lang)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -728,11 +730,12 @@ data Sigma (lang: U)
 Додавши тип рівності можно підняти систему ще на одну сходинку,
 до $O_{MLTT-75}$ або $O_{\Pi\Sigma=}$:
 \begin{lstlisting}[mathescape=true]
-data Id (lang: U)
-   = identity (t a b: lang)
-   | id_intro (a b: lang)
-   | id_elim (a b c d e: lang)
-   | id_compute (a b c d e: lang)
+def Id (lang: U) : U
+ := inductive { identity (t a b: lang)
+              | id_intro (a b: lang)
+              | id_elim (a b c d e: lang)
+              | id_compute (a b c d e: lang)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -763,30 +766,25 @@ $O_=$, $O_\Sigma$, $O_\Pi$ та синтаксиси $O_0$, $O_1$, $O_2$, $O_W$.
 
 \begin{definition} (Синтаксичне дерево мовної категорії $O_{MLTT-80}$).
 \begin{lstlisting}
-data MLTT-80
-   = forall (_: Forall MLTT-80)
-   | sigma (_: Sigma MLTT-80)
-   | id (_: Id MLTT-80)
-   | 0 (_: Empty MLTT-80)
-   | 1 (_: Unit MLTT-80)
-   | 2 (_: Bool MLTT-80)
-   | W (_: W MLTT-80)
+def MLTT-80 : U
+ := inductive { forall (_: Forall MLTT-80)
+              | sigma (_: Sigma MLTT-80)
+              | id (_: Id MLTT-80)
+              | 0 (_: Empty MLTT-80)
+              | 1 (_: Unit MLTT-80)
+              | 2 (_: Bool MLTT-80)
+              | W (_: W MLTT-80)
+              }
 
-data W (lang: U) =
-   | W_Form (n: name) (a b: lang)
-   | W_Sup (a b: lang)
-   | W_Ind (a b c: lang)
+def W (lang: U) : U
+ := inductive { W_Form (n: name) (a b: lang)
+              | W_Sup (a b: lang)
+              | W_Ind (a b c: lang)
+              }
 
-data 2 (lang: U) =
-   | 2_bool | 2_true | 2_false
-   | 2_Ind (a: lang)
-
-data 1 (lang: U) =
-   | 1_unit | 1_star
-   | 1_Ind (a: lang)
-
-data 0 (lang: U) =
-   | 0_Ind (a: lang)
+def 2 (lang: U) : U := inductive { bool | true | false | 2_Ind (a: lang) }
+def 1 (lang: U) : U := inductive { unit | star | 1_Ind (a: lang) }
+def 0 (lang: U) : U := inductive { 0_Ind (a: lang) }
 
 \end{lstlisting}
 \end{definition}
@@ -820,10 +818,12 @@ $O_=$, $O_\Sigma$, $O_\Pi$.
 3) верифікатор взаємної рекурсії.
 
 \begin{lstlisting}
-data PM = forall (_: Forall PM)
-   | sigma (_: Sigma PM)
-   | id (_: Id PM)
-   | inductive (_: InductiveSchemes PM)
+def PM : U
+ := inductive { forall (_: Forall PM)
+              | sigma (_: Sigma PM)
+              | id (_: Id PM)
+              | inductive (_: InductiveSchemes PM)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -832,20 +832,22 @@ data PM = forall (_: Forall PM)
 як конструкцій case оператора; iii) імен конструкторів індуктивного типу.
 
 \begin{lstlisting}
-data tele (A: U) = emp | tel (n: name) (b: A) (t: tele A)
-data branch (A: U) = br (n: name) (args: list name) (term: A)
-data label (A: U) = lab (n: name) (t: tele A)
-   | com (n: name) (t: tele A) (dim: list name)
-         (s: list (prod (prod name bool) A))
+def tele (A: U)  : U := inductive { emp | tel (n: name) (b: A) (t: tele A) }
+def bra (A: U)   : U := inductive { br (n: name) (args: list name) (term: A) }
+def label (A: U) : U := inductive { lab (n: name) (t: tele A)
+                                  | com (n: name) (t: tele A)
+                                        (dim: list name)
+                                        (s: list (prod (prod name bool) A)) }
 \end{lstlisting}
 
 \begin{definition} (Синтаксичне дерево $O_{*}$).
 Правило формації, конструктора та елімінатора визначається синтаксичним деревом $O_{*}$:
 \begin{lstlisting}
-data InductiveSchemes (lang: U)
-   = data (n: name) (t: tele lang) (labels: list (label lang))
-   | case (n: name) (t: lang) (branches: list (branch lang))
-   | constructor (n: name) (args: list lang)
+def InductiveSchemes (lang: U) : U
+ := inductive { data (n: name) (t: tele lang) (labels: list (label lang))
+              | case (n: name) (t: lang) (branches: list (branch lang))
+              | constructor (n: name) (args: list lang)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -874,10 +876,12 @@ $$
 Синтаксис гомотопічної мовної категорії містить усі
 попередні мовні синтаксиси: $O_I$, $O_W$, $O_=$, $O_\Sigma$, $O_\Pi$:
 \begin{lstlisting}
-data HTS = forall (_: Forall HTS)
-         | sigma (_: Sigma HTS)
-         | id (_: Id HTS)
-         | homotopy (_: Homotopy HTS)
+def HTS : U
+ := inductive { forall (_: Forall HTS)
+              | sigma (_: Sigma HTS)
+              | id (_: Id HTS)
+              | homotopy (_: Homotopy HTS)
+              }
 \end{lstlisting}
 \end{definition}
 
@@ -889,15 +893,23 @@ Path-типом в індуктивних визначеннях, структу
 
 \begin{definition} (Синтаксичне дерево $O_I$).
 \begin{lstlisting}
-data Homotopy (lang: U)
-   = pretype (n: nat)
-   | path (A x y: lang)
-   | path_lambda (name: name) (a: lang)
-   | path_app (f a: lang)
-   | interval | zero | one
-   | meet (a b: lang) | join (a b: lang) | neg (e: lang)
-   | transp (a b c: lang) | hcomp (a b: lang)
-   | glue (a b c: lang) | Glue (a b: lang) | unglue (a b: lang)
+def Homotopy (lang: U) : U
+ := inductive { pretype (n: nat)
+              | path (A x y: lang)
+              | path_lambda (name: name) (a: lang)
+              | path_app (f a: lang)
+              | interval
+              | zero
+              | one
+              | meet (a b: lang)
+              | join (a b: lang)
+              | neg (e: lang)
+              | transp (a b c: lang)
+              | hcomp (a b: lang)
+              | glue (a b c: lang)
+              | Glue (a b: lang)
+              | unglue (a b: lang)
+              }
 \end{lstlisting}
 \end{definition}
 
