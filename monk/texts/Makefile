@@ -1,5 +1,4 @@
 default:
-	./pub tex index.tex
 	(xelatex --interaction nonstopmode monk.tex)
 
 clean:
