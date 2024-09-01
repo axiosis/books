@@ -161,13 +161,14 @@ GHC,OCaml  & Coq        & CiC                 & промисловий прув�
 внутрішньої мови категорії.
 
 \begin{lstlisting}[mathescape=true]
-data pts (lang: U)
-   = star             (n: nat)
-   | var    (x: name) (l: nat)
-   | pi     (x: name) (l: nat) (d c: lang)
-   | remote (n: name) (n: nat)
-   | lambda (x: name) (l: nat) (d c: lang)
-   | app                       (f a: lang)
+def pts (lang: U) : U
+ := inductive { star             (n: nat)
+              | var    (x: name) (l: nat)
+              | pi     (x: name) (l: nat) (d c: lang)
+              | remote (n: name) (n: nat)
+              | lambda (x: name) (l: nat) (d c: lang)
+              | app                       (f a: lang)
+              }
 \end{lstlisting}
 
 \subsection*{Всесвіти}
@@ -311,12 +312,12 @@ $\eta$-експансія або правило унікальності.
 для перевірки імплементації залежної теорії.
 
 \begin{lstlisting}[mathescape=true]
-PTS (A: U): U
-  = (Form: (A -> U) -> U)
-  * (Ctor: (B: A -> U) -> ((a: A) -> B a) -> (Pi A B))
-  * (Elim: (B: A -> U)(a: A) -> (Pi A B) -> B a)
-  * (Beta: (B: A -> U)(a: A)(f: Pi A B)-> Equ (B a)(Elim B a (Ctor B f))(f a))
-  * (Eta: (B: A -> U)(a: A)(f: Pi A B)-> Equ (Pi A B) f (\(x:A) -> f x)) * 1
+def PTS (A: U): U
+ := Σ (Form: (A -> U) -> U)
+      (Ctor: (B: A -> U) -> ((a: A) -> B a) -> (Pi A B))
+      (Elim: (B: A -> U)(a: A) -> (Pi A B) -> B a)
+      (Beta: (B: A -> U)(a: A)(f: Pi A B)-> Equ (B a)(Elim B a (Ctor B f))(f a))
+      (Eta: (B: A -> U)(a: A)(f: Pi A B)-> Equ (Pi A B) f (\(x:A) -> f x)), 1
 \end{lstlisting}
 
 Доведення цих теорем дано в модулі базової бібліотеки розділу 3.
@@ -605,11 +606,11 @@ $$
 
 \begin{lstlisting}[mathescape=true]
 module list where
-    map (A B: U) (f: A -> B) : list A -> list B
-    length (A: U): list A -> nat
-    append (A: U): list A -> list A -> list A
-    foldl (A B: U) (f: B -> A -> B) (Z: B): list A -> B
-    filter (A: U) (p: A -> bool) : list A -> list A
+  def map (A B: U) (f: A -> B) : list A -> list B
+  def length (A: U): list A -> nat
+  def append (A: U): list A -> list A -> list A
+  def foldl (A B: U) (f: B -> A -> B) (Z: B): list A -> B
+  def filter (A: U) (p: A -> bool) : list A -> list A
 \end{lstlisting}
 
 $$
@@ -728,25 +729,6 @@ $\mathbf{.1}$, $\mathbf{.2}$,
 Система не повинна бути обмежена мовами та синтаксисами, ми покажемо як приклад,
 підтримку гомотопічної мови з інтервалом [0,1] сумісної з $cubical$ та з пітримкою індуктивних
 синтаксисів та кодувань попереднього рівня.
-
-\begin{lstlisting}[mathescape=true]
-data hts (lang: U)
-   = pre (n: nat)
-   | path (A x y: lang)
-   | plam (name: name) (a: lang)
-   | papp (f a: lang)
-   | interval
-   | zero
-   | one
-   | meet (a b: lang)
-   | join (a b: lang)
-   | neg (e: lang)
-   | comp (a b: lang)
-   | fill (a b c: lang)
-   | glue (a b c: lang)
-   | glue-1 (a b: lang)
-   | unglue-1 (a b: lang)
-\end{lstlisting}
 
 \newpage
 \section{Структура верифікатора}

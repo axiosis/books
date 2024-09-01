@@ -13,9 +13,11 @@
 синтаксичним деревом:
 
 \begin{lstlisting}
-data cps = var (x: nat)
-         | lam (l: nat) (d: cps)
-         | app (f a: cps)
+def cps : U
+ := inductive { var (x: nat)
+              | lam (l: nat) (d: cps)
+              | app (f a: cps)
+              }
 \end{lstlisting}
 
 Однак, на практиці, застосовують більш складні описи синтаксичних дерев,
@@ -105,25 +107,29 @@ objdump ./target/release/o -d | grep mulpd
 Return (завершення програми).
 
 \begin{lstlisting}
-data Lazy = Defer (otree: NodeId) (a: AST) (cont: Cont)
-          | Continuation (otree: NodeId) (a: AST) (cont: Cont)
-          | Return (a: AST)
-          | Start
+def Lazy : U
+ := inductive { Defer (otree: NodeId) (a: AST) (cont: Cont)
+              | Continuation (otree: NodeId) (a: AST) (cont: Cont)
+              | Return (a: AST)
+              | Start
+              }
 \end{lstlisting}
 
 Операції віртуальної машини: умовний оператор, оператор присвоєння, лямбда
 функція та аплікація, є відображеннями на конструктори синтаксичного дерева.
 
 \begin{lstlisting}
-data Cont = Expressions (a: AST) (v: Option (Iter AST)) (c: Cont)
-          | Assign (ast: AST) (cont: Cont)
-          | Cond (c,d: AST) (cont: Cont)
-          | Func (a,b,c: AST) (cont: Cont)
-          | List (acc: Vec AST) (vec: Iter AST) (i: Nat) (c: Cont)
-          | Call (a: AST) (i: Nat) (cont: Cont)
-          | Return
-          | Intercore (m: Message) (cont: Cont)
-          | Yield (cont: Cont)
+def Cont : U
+ := inductive { Expressions (a: AST) (v: Option (Iter AST)) (c: Cont)
+              | Assign (ast: AST) (cont: Cont)
+              | Cond (c,d: AST) (cont: Cont)
+              | Func (a,b,c: AST) (cont: Cont)
+              | List (acc: Vec AST) (vec: Iter AST) (i: Nat) (c: Cont)
+              | Call (a: AST) (i: Nat) (cont: Cont)
+              | Return
+              | Intercore (m: Message) (cont: Cont)
+              | Yield (cont: Cont)
+              }
 \end{lstlisting}
 
 \newpage
@@ -155,32 +161,38 @@ F: "{" "}" = Lambda [] [] []
 передачі управління в поток планувальника який закріплений за певним ядром CPU).
 
 \begin{lstlisting}
-data AST     = Atom (a: Scalar)
-             | Vector (a: Vec AST)
+def AST : U
+ := inductive { Atom (a: Scalar)
+              | Vector (a: Vec AST)
+              }
 \end{lstlisting}
 
 \begin{lstlisting}
-data Value   = Nil
-             | SymbolInt (a: u16)
-             | SequenceInt (a: u16)
-             | Number (a: i64)
-             | Float (a: f64)
-             | VecNumber (Vec i64)
-             | VecFloat (Vec f64)
-\end{lstlisting}
+def Value : U
+ := inductive { Nil
+              | SymbolInt (a: u16)
+              | SequenceInt (a: u16)
+              | Number (a: i64)
+              | Float (a: f64)
+              | VecNumber (Vec i64)
+              | VecFloat (Vec f64)
+              }
+\end{lstlisti ng}
 
 \begin{lstlisting}
-data Scalar  = Nil
-             | Any
-             | List (a: AST)
-             | Dict (a: AST)
-             | Call (a b: AST)
-             | Assign (a b: AST)
-             | Cond (a b c: AST)
-             | Lambda (otree: Option NodeId) (a b: AST)
-             | Yield (c: Context)
-             | Value (v: Value)
-             | Name (s: String)
+def Scalar : U
+ := inductive { Nil
+              | Any
+              | List (a: AST)
+              | Dict (a: AST)
+              | Call (a b: AST)
+              | Assign (a b: AST)
+              | Cond (a b c: AST)
+              | Lambda (otree: Option NodeId) (a b: AST)
+              | Yield (c: Context)
+              | Value (v: Value)
+              | Name (s: String)
+              }
 \end{lstlisting}
 
 Кожна секція цієї глави буде присвячена цим мовним компонентам
