@@ -289,22 +289,18 @@ $\Pi$-типу називається $\lambda$-аплікацією, яка с�
 подальшою нормалізацією.
 $$f\ a =_{def} \prod_{A:U}\prod_{B: A \rightarrow U}\prod_{a:A}\prod_{f: \prod_{x:A}B(a)}f(a) : B(a).$$
 \begin{lstlisting}
-apply (A B: U) (f: A -> B) (a: A) : B = f a
-app (A: U) (B: A -> U) (a: A) (f: Pi A B): B a = f a
+def apply (A B: U) (f: A $\rightarrow$ B) (a: A) : B := f a
+def app (A: U) (B: A $\rightarrow$ U) (a: A) (f: Pi A B): B a := f a
 \end{lstlisting}
 \end{definition}
 
 \begin{definition} (Композиція функцій). Композиція використовує аплікацію відповідних сигнатур.
 \begin{lstlisting}
-def $\circ^T$ (a b c: U) : U
-  := (b → c) → (a → b) → (a → c)
-
-def $\circ$ (a b c : U) :  $\circ^T$ a b c
-  := $\lambda$ (g: b → c) (f: a → b) (x: a), g (f x)
+def $\circ^T$ (a b c: U) : U := (b → c) → (a → b) → (a → c)
+def $\circ$ (a b c : U) : $\circ^T$ a b c := $\lambda$ (g: b → c) (f: a → b) (x: a), g (f x)
 \end{lstlisting}
 \end{definition}
 
-\newpage
 \begin{theorem} ($\Pi$-Обчислюваність). $\beta$-правило лямбда числення, або рівняння
 обчислювальності показує, що композиція $\mathrm{lam} \circ \mathrm{app}$ може бути скорочена.
 $$f(a) =_{B(a)} (\lambda (x:A) \rightarrow f(a))(a).$$
@@ -323,6 +319,7 @@ Eta (A:U) (B:A->U) (a:A) (f: Pi A B)
 \end{lstlisting}
 \end{theorem}
 
+\newpage
 
 \subsubsection*{Гомотопічна інтерпретація}
 Геометрично, $\Pi$-тип — це простір секцій, у той час коли кодомен — це простір розшарувань.

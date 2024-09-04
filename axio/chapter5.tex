@@ -165,7 +165,6 @@ def pts (lang: U) : U
  := inductive { star             (n: nat)
               | var    (x: name) (l: nat)
               | pi     (x: name) (l: nat) (d c: lang)
-              | remote (n: name) (n: nat)
               | lambda (x: name) (l: nat) (d c: lang)
               | app                       (f a: lang)
               }
@@ -177,9 +176,7 @@ def pts (lang: U) : U
 з предикативною (імпредикативною) ієрархією індексованих всесвітів.
 Це розширення мотивоване консистентністю\cite{Lof75} в залежній теорії типів та
 неможливістю кодування парадоксів Жирара-Хуркенса-Рассела\footnote{Так званий парадокс голяра який виникає в системах $U : U$}. Також для
-забезпечення консистентності в мові PTS відсутня аксіома \lstinline{Fixpoint}, хоча
-за допомогою рекурсивного трактування конструктора \lstinline{remote},
-така можливість зберігається.
+забезпечення консистентності в мові PTS відсутня аксіома \lstinline{Fixpoint}.
 
 $$
     \mathrm{U_0} : \mathrm{U}_1 : \mathrm{U}_2 : \mathrm{U}_3 : ...
@@ -311,15 +308,6 @@ $\eta$-експансія або правило унікальності.
 прямо вбудовані в теорію типів, таким чином ми отримуємо логічний фреймворк
 для перевірки імплементації залежної теорії.
 
-\begin{lstlisting}[mathescape=true]
-def PTS (A: U): U
- := Σ (Form: (A -> U) -> U)
-      (Ctor: (B: A -> U) -> ((a: A) -> B a) -> (Pi A B))
-      (Elim: (B: A -> U)(a: A) -> (Pi A B) -> B a)
-      (Beta: (B: A -> U)(a: A)(f: Pi A B)-> Equ (B a)(Elim B a (Ctor B f))(f a))
-      (Eta: (B: A -> U)(a: A)(f: Pi A B)-> Equ (Pi A B) f (\(x:A) -> f x)), 1
-\end{lstlisting}
-
 Доведення цих теорем дано в модулі базової бібліотеки розділу 3.
 Також можна повитися на інші доведення \cite{Henk93}.
 Рівняння обсислювальної семантики (бета та ета правила) визначаються
@@ -348,7 +336,6 @@ self-типи\cite{Stump17}\cite{Fu14}.
 \begin{lstlisting}[mathescape=true]
 type (:star,N)     D $\rightarrow$ (:star,N+1)
      (:var,N,I)    D $\rightarrow$ :true = proplists:is_defined N B, om:keyget N D I
-     (:remote,N)   D $\rightarrow$ om:cache (type N D)
      (:pi,N,0,I,O) D $\rightarrow$ (:star,h(star(type I D)),star(type O [(N,norm I)|D]))
      (:fn,N,0,I,O) D $\rightarrow$ let star (type I D), NI = norm I
                          in (:pi,N,0,NI,type(O,[(N,NI)|D]))
@@ -364,12 +351,12 @@ type (:star,N)     D $\rightarrow$ (:star,N+1)
   sh (:star,X)     N P $\rightarrow$ (:star,X)
      (:var,N,I)    N P $\rightarrow$ (:var,N,I+1) when I >= P
                        $\rightarrow$ (:var,N,I)
-     (:remote,X)   N P $\rightarrow$ (:remote,X)
      (:pi,N,0,I,O) N P $\rightarrow$ (:pi,N,0,sh I N P,sh O N P+1)
      (:fn,N,0,I,O) N P $\rightarrow$ (:fn,N,0,sh I N P,sh O N P+1)
      (:app,L,R)    N P $\rightarrow$ (:app,L,R)
 \end{lstlisting}
 
+\newpage
 \subsection*{Підстановка, нормалізація, рівність}
 Підстановка заміняє змінну у виразі на певний терм.
 
@@ -377,7 +364,6 @@ type (:star,N)     D $\rightarrow$ (:star,N+1)
  sub (:star,X)     N V L $\rightarrow$ (:star,X)
      (:var,N,L)    N V L $\rightarrow$ V
      (:var,N,I)    N V L $\rightarrow$ (:var,N,I-1) when I > L
-     (:remote,X)   N V L $\rightarrow$ (:remote,X)
      (:pi,N,0,I,O) N V L $\rightarrow$ (:pi,N,0,sub I N V L,sub O N (sh V N 0) L+1)
      (:pi,F,X,I,O) N V L $\rightarrow$ (:pi,F,X,sub I N V L,sub O N (sh V F 0) L)
      (:fn,N,0,I,O) N V L $\rightarrow$ (:fn,N,0,sub I N V L,sub O N (sh V N 0) L+1)
@@ -391,7 +377,6 @@ type (:star,N)     D $\rightarrow$ (:star,N+1)
 \begin{lstlisting}[mathescape=true]
 norm (:star,X)     $\rightarrow$ (:star,X)
      (:var,X)      $\rightarrow$ (:var,X)
-     (:remote,N)   $\rightarrow$ cache (norm N [])
      (:pi,N,0,I,O) $\rightarrow$ (:pi,N,0,norm I,norm O)
      (:fn,N,0,I,O) $\rightarrow$ (:fn,N,0,norm I,norm O)
      (:app,F,A)    $\rightarrow$ case norm F of
@@ -404,7 +389,6 @@ norm (:star,X)     $\rightarrow$ (:star,X)
 \begin{lstlisting}[mathescape=true]
   eq (:star,N)        (:star,N)        $\rightarrow$ true
      (:var,N,I)       (:var,(N,I))     $\rightarrow$ true
-     (:remote,N)      (:remote,N)      $\rightarrow$ true
      (:pi,N1,0,I1,O1) (:pi,N2,0,I2,O2) $\rightarrow$
           let :true = eq I1 I2
            in eq O1 (subst (shift O2 N1 0) N2 (:var,N1,0) 0)
@@ -514,21 +498,6 @@ dec := 0 + codec      cobrs  := | br brs
 Індуктивні синтаксиси будуються на телескопах Диб'єра,
 конструкторах сум, та їх елімінаторах.
 
-\begin{lstlisting}
-data tele   (A: U) = emp | tel (n: name) (b: A) (t: tele A)
-data branch (A: U) =        br (n: name) (args: list name) (term: A)
-data label  (A: U) =       lab (n: name) (t: tele A)
-                         | com (n: name) (t: tele A) (dim: list name)
-                               (s: list (prod (prod name bool) A))
-\end{lstlisting}
-
-\begin{lstlisting}
-data ind (lang: U)
-   = datum  (n: name) (t: tele lang) (labels:   list (label lang))
-   | case   (n: name) (t: lang)      (branches: list (branch lang))
-   | ctor   (n: name)                (args:     list lang)
-\end{lstlisting}
-
 \newpage
 \subsection{Поліноміальні функтори}
 Існує два види формальної рекурсії: 1) перша з найменшою нерухомою точкою
@@ -541,7 +510,8 @@ data ind (lang: U)
 та моделює нетерміновані послідовності, процеси тощо (або рекурсивні добутки).
 Кодування найменшою нерухомою точкою ще називається кодуванням
 добре-визначиними деревами або кодування поліноміальними функторами.
-
+\\
+\\
 \noindent Натуральні числа: $\mu\ X \rightarrow 1 + X$\\
 Списки елементів A: $\mu\ X \rightarrow 1 + A \times X$\\
 Лямбда числення: $\mu\ X \rightarrow 1 + X \times X + X$\\
@@ -593,7 +563,10 @@ $$
 $$
 
 \begin{lstlisting}[mathescape=true]
-data list (A: U) = cons (x: A) (cs: list A) | nil
+def list (A: U) : U
+ := inductive { cons (x: A) (cs: list A)
+              | nil
+              }
 \end{lstlisting}
 
 $$
@@ -605,12 +578,11 @@ nil = \lambda\ list \rightarrow \lambda\ cons \rightarrow \lambda\ nil \rightarr
 $$
 
 \begin{lstlisting}[mathescape=true]
-module list where
-  def map (A B: U) (f: A -> B) : list A -> list B
-  def length (A: U): list A -> nat
-  def append (A: U): list A -> list A -> list A
-  def foldl (A B: U) (f: B -> A -> B) (Z: B): list A -> B
-  def filter (A: U) (p: A -> bool) : list A -> list A
+axiom map (A B: U) (f: A -> B) : list A -> list B
+axiom length (A: U): list A -> nat
+axiom append (A: U): list A -> list A -> list A
+axiom foldl (A B: U) (f: B -> A -> B) (Z: B): list A -> B
+axiom filter (A: U) (p: A -> bool) : list A -> list A
 \end{lstlisting}
 
 $$
@@ -725,7 +697,6 @@ $\mathbf{.1}$, $\mathbf{.2}$,
 для всесвітів та типів з відповідними елімінаторами. Усі ці концепції, та їх
 моделі більш формально та детально описані у наступному розділі 3.
 
-\newpage
 Система не повинна бути обмежена мовами та синтаксисами, ми покажемо як приклад,
 підтримку гомотопічної мови з інтервалом [0,1] сумісної з $cubical$ та з пітримкою індуктивних
 синтаксисів та кодувань попереднього рівня.
@@ -742,7 +713,7 @@ $\mathbf{.1}$, $\mathbf{.2}$,
 та багато інших досніпових модулів, крім $\Pi$-типу, але які
 теж підпорядковуються системі типів Мартіна-Льофа.
 
-\subsection*{Космос \nat-індексованих всесвітів $\omega$ }
+\subsection*{Космос $\mathbb{N}$-індексованих всесвітів $\omega$ }
 
 В теорії типів всі сигнатури всіх типів живуть в ієрархіях
 всесвітів індексованих натуральними числами. Множина таких
@@ -767,6 +738,8 @@ $\mathbf{.1}$, $\mathbf{.2}$,
 $\tau = \{ \mathbf{infer},\mathbf{app}, \mathbf{check}, \mathbf{act}, \mathbf{conv}, \mathbf{eval} \}$,
 які повинні бути імплементовані для кожного типу, вбудованого в верифікатор.
 
+
+\newpage
 \subsection*{Контексти та телескопи \sigmatype }
 
 В теорії типів контексти, як алгебраїчні послідовності які містять сигнатури, які теж у свою
