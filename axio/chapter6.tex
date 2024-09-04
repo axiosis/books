@@ -305,8 +305,9 @@ def $\circ$ (a b c : U) : $\circ^T$ a b c := $\lambda$ (g: b → c) (f: a → b)
 обчислювальності показує, що композиція $\mathrm{lam} \circ \mathrm{app}$ може бути скорочена.
 $$f(a) =_{B(a)} (\lambda (x:A) \rightarrow f(a))(a).$$
 \begin{lstlisting}
-Beta (A:U) (B:A->U) (a: A) (f: Pi A B)
-   : Path (B a) (app A B a (lam A B f)) (f a)
+def $\Pi$-$\beta$ (A : U) (B : A → U) (a : A) (f : Pi A B)
+  : Path (B a) (Π-apply A B (Π-lambda A B f) a) (f a)
+ := idp (B a) (f a)
 \end{lstlisting}
 \end{theorem}
 
@@ -314,8 +315,9 @@ Beta (A:U) (B:A->U) (a: A) (f: Pi A B)
 унікальності показує, що композиція $\mathrm{app} \circ \mathrm{lam}$ може бути скорочена.
 $$f =_{(x:A)\rightarrow B(a)} (\lambda (y:A) \rightarrow f(y)).$$
 \begin{lstlisting}
-Eta (A:U) (B:A->U) (a:A) (f: Pi A B)
-   : Path (Pi A B) f (\(x:A) -> f x)
+def $\Pi$-$\eta$ (A : U) (B : A → U) (a : A) (f : Pi A B)
+  : Path (Pi A B) f (λ (x : A), f x)
+ := idp (Pi A B) f
 \end{lstlisting}
 \end{theorem}
 
