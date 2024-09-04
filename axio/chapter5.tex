@@ -531,7 +531,8 @@ J елімінатор Id типу закодованого в Бом кодув
 елімінатори гомотопічних примітивів, наприклад елімінатори гомотопічного
 візрізка як \lstinline{funExt}, \lstinline{homotopy}.
 
-\newpage\subsection{Кодування Бома}
+\newpage
+\subsection{Кодування Бома}
 Тип даних List над даним типом А, може бути представлений як ініціальні алгебра
 $(\mu L_A, in)$ функтору $L_A(X) = 1 + (A \times X)$. Позначається $\mu L_A = List(A)$.
 Функції-конструктори $nil: 1 \rightarrow List(A)$ та
@@ -570,13 +571,11 @@ def list (A: U) : U
               }
 \end{lstlisting}
 
-$$
 \begin{cases}
 list = \lambda\ ctor \rightarrow \lambda\ cons \rightarrow \lambda\ nil \rightarrow ctor\\
 cons = \lambda\ x\ \rightarrow \lambda\ xs \rightarrow \lambda\ list \rightarrow \lambda\ cons \rightarrow\ \lambda\ nil \rightarrow cons\ x\ (xs\ list\ cons\ nil)\\
 nil = \lambda\ list \rightarrow \lambda\ cons \rightarrow \lambda\ nil \rightarrow nil\\
 \end{cases}
-$$
 
 \begin{lstlisting}[mathescape=true]
 axiom map (A B: U) (f: A -> B) : list A -> list B
@@ -586,7 +585,6 @@ axiom foldl (A B: U) (f: B -> A -> B) (Z: B): list A -> B
 axiom filter (A: U) (p: A -> bool) : list A -> list A
 \end{lstlisting}
 
-$$
 \begin{cases}
 len = foldr\ (\lambda\ x\ n \rightarrow succ\ n)\ 0\\
 (++) = \lambda\ ys \rightarrow foldr\ cons\ ys\\
@@ -594,9 +592,9 @@ map = \lambda\ f \rightarrow foldr\ (\lambda x\ xs \rightarrow cons\ (f\ x)\ xs)
 filter = \lambda\ p \rightarrow foldr\ (\lambda x\ xs \rightarrow if\ p\ x\ then\ cons\ x\ xs\ else\ xs)\ nil\\
 foldl = \lambda\ f\ v\ xs = foldr\ (\lambda\ xg\rightarrow\ (\lambda \rightarrow g\ (f\ a\ x)))\ id\ xs\ v\\
 \end{cases}
-$$
 
-\newpage\subsection{Операційна семантика}
+\newpage
+\subsection{Операційна семантика}
 Традиційно індуктивні типи входять в операційну семантику систем побудованих
 та основі MLTT-80 (таких як кубічні системи, або система HTS).
 Оригінально Мартін-Льоф виразив індуктивні дерева через $W$-типи, для яких
