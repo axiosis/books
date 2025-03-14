@@ -396,8 +396,7 @@ FiberPi (B: U) (F: B -> U) (y: B)
 %\end{theorem}
 
 \subsubsection*{Категоріальна інтерпретація}
-The adjoints $\Pi$ and $\Sigma$ is not the only adjoints could be presented in type system.
-Axiomatic cohesions could contain a set of adjoint pairs as a core type checker operations.
+Спряження $\Pi$ і $\Sigma$ не єдині які можуть представлені в системі.
 
 \begin{definition} (Залежний добуток).
 The dependent product along morphism $g: B \rightarrow A$ in category $C$ is the right
@@ -405,21 +404,21 @@ adjoint $\Pi_g : C_{/B} \rightarrow C_{/A}$ of the base change functor.
 \end{definition}
 
 \begin{definition} (Простір шарів розшарувань).
-Let $\mathbf{H}$ be a $(\infty,1)$-topos, and let $E \rightarrow B : \mathbf{H}_{/B}$ a bundle in
-$\mathbf{H}$, object in the slice topos. Then the space of sections $\Gamma_\Sigma(E)$
-of this bundle is the Dependent Product:
+Нехай $\mathbf{H}$ --- це $(\infty,1)$-топос, а $E \rightarrow B : \mathbf{H}_{/B}$ ---  розшарування в
+$\mathbf{H}$, тобто об'єкт у зрізаному топосі.  Тоді простір перерізів $\Gamma_\Sigma(E)$
+цього розшарування є залежним добутком:
 $$ \Gamma_\Sigma(E) = \Pi_\Sigma (E) \in \mathbf{H}. $$
 \end{definition}
 
 \begin{theorem} (Множина морфізмів).
-If codomain is set then space of sections is a set.
+Якщо область значень є множиною, тоді простір перерізів є множиною.
 \begin{lstlisting}
 setFun (A B : U) (_: isSet B) : isSet (A -> B)
 \end{lstlisting}
 \end{theorem}
 
 \begin{theorem} (Стягуваність).
-If domain and codomain is contractible then the space of sections is contractible.
+Якщо область визначення і область значень є стягуваними, то простір перерізів також є стягуваним.
 \begin{lstlisting}
 piIsContr (A: U) (B: A -> U) (u: isContr A)
           (q: (x: A) -> isContr (B x)) : isContr (Pi A B)
@@ -427,60 +426,69 @@ piIsContr (A: U) (B: A -> U) (u: isContr A)
 \end{theorem}
 
 \begin{definition} (Шар розшарування).
-A section of morphism $f: A \rightarrow B$ in some category is the morphism $g: B \rightarrow A$
-such that $f \circ g: B \mapright{g} A \mapright{f} B$ equals the identity morphism on B.
+Перерізом морфізму $f: A \rightarrow B$ у деякій категорії називається морфізм $g: B \rightarrow A$
+такий, що їхня композиція $f \circ g: B \mapright{g} A \mapright{f} B$ дорівнює тотожному морфізму на $B$.
 \end{definition}
 
 \newpage
 \subsubsection{$\Sigma$-тип}
-$\Sigma$ is a dependent sum type, the generalization of products.
-$\Sigma$ type is a total space of fibration. Element of total
-space is formed as a pair of basepoint and fibration.
+$\Sigma$ --- це залежний тип суми, узагальнення добутків.
+Тип $\Sigma$ є повним простором розшарування.
+Елемент повного простору формується як пара, що складається з базової точки та розшарування.
+
+
 
 \subsubsection{Теоретико-типов інтерпретація}
 
-\begin{definition} ($\Sigma$-Формація).
+\begin{definition} ($\Sigma$-Формація).Тип $\Sigma$ утворює залежну суму для базового типу $A$ та залежного типу $B$.
+Це правило формування типу в теорії типів, де $U$ — універсум типів. Задане $A:U$ та $B:A\rightarrow U$
+(функція, що кожному $a:A$ ставить у відповідність тип $B(a)$, тип $\Sigma(A,B)$ є сукупністю всіх пар $(x,B(x))$,
+що описують залежність між базою та розшаруванням.
 \begin{lstlisting}
-Sigma (A : U) (B : A -> U) : U = (x : A) * B x
+def Sigma (A : U) (B : A -> U) : U := Σ (x : A), B x
 \end{lstlisting}
 \end{definition}
 
 \begin{definition} ($\Sigma$-Предствалення).
+Пара $(a,b)$ є конструктором для типу $\Sigma(A,B)$.
+Конструктор $\Sigma(A,B)$ через пару $(a,b)$, де $b:B(a)$.
+Це базовий спосіб введення елементів у залежний тип суми.
+
 \begin{lstlisting}
-dpair (A: U) (B: A -> U) (a: A) (b: B a) : Sigma A B = (a,b)
+def dpair (A: U) (B: A -> U) (a: A) (b: B a) : Sigma A B = (a,b)
 \end{lstlisting}
 \end{definition}
 
 \begin{definition} ($\Sigma$-Елімінація).
+Ці правила визначають проєкції та індукцію для типу $\Sigma$.
 \begin{lstlisting}
-pr1 (A: U) (B: A -> U)
-    (x: Sigma A B): A = x.1
-
-pr2 (A: U) (B: A -> U)
-    (x: Sigma A B): B (pr1 A B x) = x.2
-
-sigInd (A: U) (B: A -> U) (C: Sigma A B -> U)
-       (g: (a: A) (b: B a) -> C (a, b))
-       (p: Sigma A B) : C p = g p.1 p.2
+def pr1 (A: U) (B: A -> U) (x: Sigma A B): A := x.1
+def pr2 (A: U) (B: A -> U) (x: Sigma A B): B (pr1 A B x) := x.2
+def sigInd (A: U) (B: A -> U) (C: Sigma A B -> U)
+    (g: (a: A) (b: B a) -> C (a, b)) (p: Sigma A B)
+  : C p := g p.1 p.2
 \end{lstlisting}
 \end{definition}
 
 \begin{theorem} ($\Sigma$-Обчислюваність).
+Теорема стверджує, що проєкції $pr_1$ і $pr_2$, застосовані до сконструйованої пари $(a,b)$, повертають відповідно $a$ та $b$.
+$Equ$ позначає еквівалентність у термінах теорії типів, гарантуючи коректність обчислень.
 \begin{lstlisting}
-Beta1 (A: U) (B: A -> U)
-      (a:A) (b: B a)
-    : Equ A a (pr1 A B (a,b))
+def Beta1 (A: U) (B: A -> U) (a:A) (b: B a)
+  : Equ A a (pr1 A B (a,b))
 
-Beta2 (A: U) (B: A -> U)
-      (a: A) (b: B a)
-    : Equ (B a) b (pr2 A B (a,b))
+def Beta2 (A: U) (B: A -> U) (a: A) (b: B a)
+  : Equ (B a) b (pr2 A B (a,b))
 \end{lstlisting}
 \end{theorem}
 
 \begin{theorem} ($\Sigma$-Унікальність).
+Теорема стверджує, що будь-який елемент $p:\Sigma(A,B)$ еквівалентний парі, складеній із його проєкцій $(pr_1,pr_2)$,
+Це відображає принцип унікальності в теорії типів, де структура пари повністю визначається її компонентами.
+
 \begin{lstlisting}
-Eta2 (A: U) (B: A -> U) (p: Sigma A B)
-   : Equ (Sigma A B) p (pr1 A B p,pr2 A B p)
+def Eta2 (A: U) (B: A -> U) (p: Sigma A B)
+  : Equ (Sigma A B) p (pr1 A B p,pr2 A B p)
 \end{lstlisting}
 \end{theorem}
 
