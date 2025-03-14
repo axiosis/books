@@ -118,6 +118,7 @@ System F та сучасні фібраційні системи з залежн
  \caption{Класифікація мов програмування}
   \begin{tabular}{lcc}
    \hline
+\rowcolor{ZimaBlue}
        \textbf{Домен} & \textbf{Мови програмування} \\
     \hline
        HW & VHDL, Verilog, Clash, Chisel, SystemC, Lava, BSV \\
@@ -313,32 +314,38 @@ $\star : \Box$, $\Box : \Box$, $\Box : \star$. Усі типизовані мо�
 програмування (близько 2000), які детально прокатегоризовані
 в <<Енциклопедії Мов Програмування>>.
 
-\begin{table}
- \caption{ Ландшафт атаки}
-  \begin{tabular}{lccccc}
+\begin{table}[ht]
+ \caption{Ландшафт атаки}
+  \begin{tabular}{lcccc}
    \hline
+\rowcolor{ZimaBlue}
        \textbf{Мова} & \textbf{Чиста мова} & \textbf{Система F} & \textbf{Runtime} & \textbf{Віртуалізація} \\
    \hline
- Alonzo            & STLC      & OCaml   & native & Mirage \\
- Henk              & PTS       & Erlang  & BEAM   & LING \\
+ Henk              & PTS         & Erlang  & BEAM   & LING \\
  Per               & MLTT      & Erlang  & BEAM   & Mirage \\
- Per               & MLTT      & OCaml   & native & Mirage \\
- Anders            & HTS       & OCaml   & native & Mirage \\
-    \hline
+   \hline
+ Alonzo            & STLC       & OCaml   & native & Mirage \\
+ Henk              & PTS (CoC)  & OCaml   & native & Mirage \\
+ Per               & MLTT-80    & OCaml   & native & Mirage \\
+ Frank             & CoC + CIC  & OCaml   & native & Mirage \\
+ Christine         & CIC + Prop & OCaml   & native & Mirage \\
+ Anders            & HTS        & OCaml   & native & Mirage \\
+ Fabien            & $\mathbf{A^1}$-HoTT       & OCaml   & native & Mirage \\
+ Dan               & $\infty$-HoTT (GAP) & OCaml   & native & Mirage \\
+ Jack              & $\Sigma\Omega$-TT       & OCaml   & native & Mirage \\
+ Urs               & $\fl\sharp$-HoTT   & OCaml   & native & Mirage \\
+   \hline
     \rowcolor{LightGray}
- Henk              & PTS       & Per     & BEAM   & LING \\
+ Henk              & PTS        & Per     & BEAM   & LING \\
     \rowcolor{LightGray}
- Henk              & PTS       & Per     & CPS    & L4 \\
+ Christine         & MLTT       & Per     & BEAM   & Mirage \\
     \rowcolor{LightGray}
- Per               & MLTT      & Per     & native & Mirage \\
-    \rowcolor{LightGray}
- Urs               & ESHTS     & Per     & native & Mirage \\
     \hline
   \end{tabular}
-  \small Сірим кольором показані напрямки метациркулярної атаки.
+  \small Сірим кольором показані мови з екстракцією програм.
 \end{table}
 
-
+\newpage
 \subsection{Методи дослідження}
 Існує багадо підходів для формальної специфікації,
 верифікації та валідації, усі вони даються у розділі 1, де
@@ -356,19 +363,19 @@ $\star : \Box$, $\Box : \Box$, $\Box : \star$. Усі типизовані мо�
  \caption{Категорні моделі теорій типів}
   \begin{tabular}{lcc}
     \hline
-       \textbf{Категорна модель} & \textbf{Позначення} \\
+\rowcolor{ZimaBlue}
+ \textbf{Модель} & \textbf{Позначення} & \\
     \hline
- Локальні декартово-замкнені категорії Сілі & LCCC \\
- Обширні категорії Гротендіка               & CompCat \\
- Природні моделі Еводі                      & NatMod \\
- Категорії з сімействами Диб`єра            & CwF \\
- Категорії з атрибутами                     & CwA \\
- D-Категорії Картмела                       & DCat \\
- Контекстуальні системи Воєводського        & C-Systems \\
+ Локальні декартово-замкнені категорії Сілі & LCCC & \\
+ Обширні категорії Гротендіка               & CompCat & \\
+ Природні моделі Еводі                      & NatMod & \\
+ Категорії з сімействами Диб`єра            & CwF & \\
+ Категорії з атрибутами                     & CwA & \\
+ D-Категорії Картмела                       & DCat & \\
+ Контекстуальні системи Воєводського        & C-Systems & \\
     \hline
   \end{tabular}
 \end{table}
-
 
 \subsection{Формальне середовище виконання}
 В рамках розробленого фреймворку будується
