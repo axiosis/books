@@ -481,6 +481,20 @@ O_\infty : O_{CPS} \rightarrow O_{PTS} \rightarrow O_{MLTT-80} \rightarrow O_{HT
 набір об'єктів в системі мов програмування.
 Покажемо приклади екземплярів які можно породити в рамках цієї моделі.
 
+
+\begin{lstlisting}
+Henk = U$^n$, $\Pi$.
+Frank = U$^n$, $\Pi$, Ind.
+Errett = U$^n$, $\Pi$, $\Sigma$, Id.
+Per = U$^n$, $\Pi$, $\Sigma$, 0, 1, 2, W, Id.
+Christine = U$^n$, $\Pi$, $\Sigma$, Id, Ind, Prop
+Anders = U$^n$, V$^n$, $\Pi$, $\Sigma$, 0, 1, 2, W, Path, Prop.
+Dan = Anders, Chain, Category, Monoid, Group, Ring, $\Delta$.
+Urs = Anders, U$_i^{|o|}$, A $\times$ B, $\mathbf{G}$ $\rightarrow$ A, $\mathfrak{s}$, $\flat$, $\sharp$, $\Im$, $\bigcirc$.
+Fabien = Anders, $k$, $\mathbf{A}^1$, S$^{1,1}$, L$_{\mathnf{A}^1}$, Susp, Trunc$^n$, Nisn, $K^1(Z,n)$, BGL, MGL.
+Jack = Anders, Fib$^n$, Susp, Trunc$^n$, $\mathbf{N}$, $\mathbf{N}_\infty$, Spec, $\pi_n$^S(A), $S^{o}[p]$, Group, A $\cup$ B, [A, B], H$^n$(X; G), G $\otimes$ H, SS(E, r).
+\end{lstlisting}
+
 \newpage
 \subsection{Мінімальна система}
 Приклад мінімальної системи, яка містить лише одну мову для доведення теорем
@@ -792,11 +806,11 @@ def 0 (lang: U) : U := inductive { 0_Ind (a: lang) }
 \end{definition}
 
 \newpage
-\subsection{Система індуктивних типів Paulin-Mohring}
+\subsection{Система індуктивних типів CIC Paulin-Mohring}
 
-\begin{definition} (Мовна категорія $O_{PM}$).
+\begin{definition} (Мовна категорія $O_{CIC}$).
 \begin{equation}
-O_{PM} =
+O_{CIC} =
 \begin{cases}
 Ob: \{\ X: maybe\ PM, target: maybe\ CPS\ \} \\
 Hom: \begin{cases}
@@ -812,7 +826,7 @@ cerfity = type \circ norm \circ induction \circ extract \\
 не використовуючи схеми кодування Бома, містить усі попередні мовні синтаксиси:
 $O_=$, $O_\Sigma$, $O_\Pi$.
 
-\begin{definition} (Синтаксичне дерево мовної категорії $O_{PM}$).
+\begin{definition} (Синтаксичне дерево мовної категорії $O_{CIC}$).
 
 Головним чином, система загальних індуктивних схем предбачає три основних компоненти:
 1) верифікатор строго позитивних схем;
@@ -820,11 +834,12 @@ $O_=$, $O_\Sigma$, $O_\Pi$.
 3) верифікатор взаємної рекурсії.
 
 \begin{lstlisting}
-def PM : U
- := inductive { forall (_: Forall PM)
-              | sigma (_: Sigma PM)
-              | id (_: Id PM)
-              | inductive (_: InductiveSchemes PM)
+def CIC : U
+ := inductive { forall (_: Forall CIC)
+              | sigma (_: Sigma CIC)
+              | id (_: Id CIC)
+              | prop (_: Id CIC)
+              | inductive (_: Ind CIC)
               }
 \end{lstlisting}
 \end{definition}
@@ -833,23 +848,20 @@ def PM : U
 який містить послідовність елементів мови; ii) розгалуження,
 як конструкцій case оператора; iii) імен конструкторів індуктивного типу.
 
+\begin{definition} (Синтаксичне дерево $O_{IND}$).
+Правило формації, конструктора та елімінатора визначається синтаксичним деревом $O_{IND}$:
 \begin{lstlisting}
-def tele (A: U)  : U := inductive { emp | tel (n: name) (b: A) (t: tele A) }
-def bra (A: U)   : U := inductive { br (n: name) (args: list name) (term: A) }
-def label (A: U) : U := inductive { lab (n: name) (t: tele A)
-                                  | com (n: name) (t: tele A)
-                                        (dim: list name)
-                                        (s: list (prod (prod name bool) A)) }
-\end{lstlisting}
-
-\begin{definition} (Синтаксичне дерево $O_{*}$).
-Правило формації, конструктора та елімінатора визначається синтаксичним деревом $O_{*}$:
-\begin{lstlisting}
-def InductiveSchemes (lang: U) : U
- := inductive { data (n: name) (t: tele lang) (labels: list (label lang))
-              | case (n: name) (t: lang) (branches: list (branch lang))
-              | constructor (n: name) (args: list lang)
+def Ind (lang: U) : U
+ := inductive { formation (_: IndForm lang)
+              | constructor (_: list (triple Nat IndForm lang))
+              | eliminator (t: IndForm) (a b: lang) (cases: list lang)
               }
+
+def IndForm (lang: U) : U
+ := Σ (name : string)
+      (params : list (prod name lang))
+      (level : Nat)
+      (constrs : list (prod (Nat lang))), 1
 \end{lstlisting}
 \end{definition}
 
