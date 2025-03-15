@@ -1,5 +1,5 @@
-\usepackage[osf]{mathpazo}
 \usepackage{musicography}
+\usepackage[osf]{mathpazo}
 \usepackage{stmaryrd}
 \usepackage{color,colortbl}
 \usepackage{epigraph}
@@ -7,19 +7,22 @@
 \usepackage{amsmath,amssymb,amsthm,wasysym}
 \usepackage{graphicx,sidecap,tikz}
 \usepackage{fullwidth}
-\usepackage[T1]{fontspec}
+\usepackage{fontspec}
 \usepackage{hyphenat}
+\usepackage{hyperref}
 \usepackage{ifthen}
 \usepackage{tikz-cd}
-\usepackage[english,russian]{babel}
+\usepackage[ukrainian]{babel}
 \usepackage{tabstackengine}
 \usepackage{graphicx}
- \usepackage{cite}
-\usepackage{hyperref}
+\usepackage{cite}
 \usepackage{moreverb}
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{newunicodechar}
+\usepackage{silence}
+
+\babelprovide[hyphenrules=ukrainian]{ukrainian}
 
 %\definecolor{keywordcolor}{rgb}{0.0, 0.1, 0.6}
 \definecolor{keywordcolor}{rgb}{0.0, 0.1, 0.8}
@@ -186,7 +189,10 @@
 
 \lefthyphenmin=1
 \hyphenpenalty=100
-\tolerance=3000
+\tolerance=11000
+\emergencystretch=1em
+\hfuzz=2pt
+\vfuzz=2pt
 
 \fontencoding{T1}
 \newfontfamily{\cyrillicfont}{Geometria}
@@ -201,3 +207,6 @@
 \lstset{language=infinity}
 
 \definecolor{ZimaBlue}{HTML}{A1D8FC}
+
+\newcommand{\defequ}{\stackrel{\text{def}}{=}} % Definitional equality
+\newcommand{\presheaf}{\mathcal{P}} % Presheaf (calligraphic P, common notation)

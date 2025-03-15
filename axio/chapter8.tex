@@ -70,7 +70,7 @@ allpaths (o: U): U
 концептів. Туди --- ((p: concept o) -> nondual o p) -> allpaths o,
 Сюди --- allpaths o -> ((p: concept o) -> nondual o p). І доведемо її!
 Як видно з сигнатур нам лише треба побудувати функцію транспорту між
-двома просторами шляхів: (p x) =_U (p y) і x =_o y. Скористаємося
+двома просторами шляхів: (p x) $=_U$ (p y) і x $=_o$ y. Скористаємося
 приведенням шляху до стрілки (coerce) та конгруентності (cong) з базової бібліотеки.
 
 \begin{lstlisting}
@@ -159,9 +159,9 @@ Erlang version is expected to be used both on LING and BEAM Erlang virtual machi
 This language allows you to define trusted operations in System F and extract this routine to Erlang/OTP platform and plug as trusted resources.
 As the example, we also provide infinite coinductive process creation and inductive shell that linked to Erlang/OTP IO functions directly.
 
-{\bf IO} protocol.
-We can construct in pure type system the state machine based on (co)free monads driven by {\bf IO/IOI} protocols.
-Assume that {\bf String} is a {\bf List\ Nat} (as it is in Erlang natively), and three external constructors: getLine, putLine and pure.
+\textbf{IO} protocol.
+We can construct in pure type system the state machine based on (co)free monads driven by \textbf{IO/IOI} protocols.
+Assume that \textbf{String} is a \textbf{List\ Nat} (as it is in Erlang natively), and three external constructors: getLine, putLine and pure.
 We need to put correspondent implementations on host platform as parameters to perform the actual IO.
 
 \begin{lstlisting}

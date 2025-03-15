@@ -492,7 +492,7 @@ Anders = U$^n$, V$^n$, $\Pi$, $\Sigma$, 0, 1, 2, W, Path, Prop.
 
 Urs = Anders, U$_i^{|o|}$, A $\times$ B, $\mathbf{G}$ $\rightarrow$ A, $\mathfrak{s}$, $\flat$, $\sharp$, $\Im$, $\bigcirc$.
 Dan = Anders, Chain, Cochain, Category, Monoid, Group, Ring, $\Delta$.
-Fabien = Anders, $k$, $\mathbf{A}^1$, S$^{1,1}$, L$_{\mathnf{A}^1}$, Susp, Trunc$^n$, Nisn, $K^1(Z,n)$, BGL, MGL.
+Fabien = Anders, $k$, $\mathbf{A}^1$, S$^{1,1}$, L$_{\mathbf{A}^1}$, Susp, Trunc$^n$, Nisn, $K^1(Z,n)$, BGL, MGL.
 Jack = Anders, Fib$^n$, Susp, Trunc$^n$, $\mathbf{N}$, $\mathbf{N}_\infty$, Spec, $\pi_n$^S(A), $S^{o}[p]$, Group,
        A $\cup$ B, [A, B], H$^n$(X; G), G $\otimes$ H, SS(E, r).
 \end{lstlisting}
@@ -724,7 +724,7 @@ def Pi (lang: U) : U
 \end{definition}
 
 \newpage
-\subsection{Теорія типів Мартіна-Льофа MLTT-75$}
+\subsection{Теорія типів Мартіна-Льофа MLTT-75}
 Мова теорії типів є сучасною основою всіх пруверів з залежними типами,
 такими, наприклад, як NuPRL та Agda. Багато так званих $\Pi\Sigma$ пруверів
 імплементують $MLTT-75$ серед таких як:
@@ -932,7 +932,7 @@ def HTS : U
 \end{lstlisting}
 \end{definition}
 
-Гомотопічна типа наслідує $O_{MLTT-80}$ але модифіковану з
+Гомотопічна мова наслідує $O_{MLTT-80}$ але модифіковану з
 Path-типом в індуктивних визначеннях, структурою композиції,
 анонсує Path-тип (формація, конструктор, та елімінатор)
 як лямбда функцію на відрізку, а також склейку типів у всесвіті
@@ -977,7 +977,6 @@ AXIO/1 складається з середовища виконання та й
 мови та їх екстрактори для виконання Alonzo, Henk, Per, Anders для доведення теорем,
 які використовують Lean-подібний синтаксис. Неверифікований CPS інтерпретатор реалізований
 на мові Rust.
-
 
 \newpage
 \subsection*{Інтерпретатори і системні мови}
@@ -1096,8 +1095,7 @@ def quot (A: U) (R : A -> A -> U) : U
               : Equ (quot A R) (quotient a) (quotient b)
               }
 \end{lstlisting}
-\\
-\\
+
 \newpage
 \subsection*{Anders}
 
@@ -1117,7 +1115,7 @@ def idfun'' (A : U) : A $\rightarrow$ A := ($\lambda$ (a : A), hcomp A 0 ($\lamb
 def isFiberBundle (B: U) (p: B $\rightarrow$ U) (F: U): U
  := Σ (v: U) (w: surjective v B), (Π (x: v), PathP (<_>U) (p (w.1 x)) F)
 def ~~ (X : U) (a x' : X) : U := Path ($\Im$ X) ($\iota$ X a) ($\iota$ X x')
-def $\mathbb{D}$ (X : U) (a : X) : U := Σ (x′ : X), ~~ X a x'
+def $\mathbb{D}$ (X : U) (a : X) : U := Σ (x' : X), ~~ X a x'
 def unitDisc (X : U) (x : $\Im$ X) : U := Σ (x' : X), Path ($\Im$ X) x ($\iota$ X x')
 def starDisc (X : U) (x : X) : $\mathbb{D}$ X x := (x, idp ($\Im$ X) ($\iota$ X x))
 def T$^\infty$ (A : U) : U := Σ (a : A), $\mathbb{D}$ A a

@@ -62,7 +62,7 @@ MLTT моделюванню та кубічної верифікації. Так
 4) бета-рівняння або правило обчислення;
 5) ета-рівняння або принцип унікальності.
 
-\begin{table}[h]
+\begin{table}[ht]
 \begin{adjustwidth}{-3cm}{}
   \caption{Інтерпретації теорії типів які відповідають математичним теоріям}
  \begin{tabular}{lcccc}
@@ -327,7 +327,7 @@ def $\Pi$-$\eta$ (A : U) (B : A → U) (a : A) (f : Pi A B)
 \subsubsection*{Гомотопічна інтерпретація}
 Геометрично, $\Pi$-тип — це простір секцій, у той час коли кодомен — це простір розшарувань.
 Лямбда-функції — це простір секцій, або точки в цих просторах, у той час, коли результат функції — це розшарування.
-$\Pi$-тип також репрезентує декартовий добуток сімʼї множин, узагальнюючи звичайний декартовий добуток множин.
+$\Pi$-тип також репрезентує декартовий добуток сім'ї множин, узагальнюючи звичайний декартовий добуток множин.
 
 \begin{definition} (Розшарування).
 Розшарування відображення $p: E \rightarrow B$ у точку $y: B$ є всіма точками $x: E$, такими, що $p(x)=y$.
@@ -335,7 +335,7 @@ $\Pi$-тип також репрезентує декартовий добуто
 
 \begin{definition} (Пучок розрашувань).
 Пучок розшарувань $ F \rightarrow E \mapright{p} B$ над тотальним простором $E$ з розшаруванням $F$ і базою $B$ — це
-структура $(F,E,p,B)$, де $p: E \rightarrow B$ — це сурʼєктивне відображення з наступними властивостями:
+структура $(F,E,p,B)$, де $p: E \rightarrow B$ — це сур'єктивне відображення з наступними властивостями:
 для будь-якої точки $y: B$ існує окіл $U_b$ для якого гомеоморфізм $f: p^{-1}(U_b) \rightarrow U_b \times F$
 робить наступну діаграму комутативною.
 \begin{center}
@@ -854,13 +854,13 @@ It combines 4 Path rules (no eta), 5 $\Pi$ rules, and 6 $\Sigma$ rules (two elim
 The proof is provided by direct embedding (internalizing) the model intro the model
 of type checker which is even more powerful.
 
-\begin{definition} (MLTT $≔$).
+\begin{definition} (MLTT).
 The MLTT as a Type is defined by taking all rules
 for $\Pi$, $\Sigma$ and Path types into one $\Sigma$ telescope or context.
 \end{definition}
 
 \begin{lstlisting}
-def MLTT (A: U) : U ≔ Σ
+def MLTT (A: U) : U := Σ
     (Π-form  : Π (B: A → U), U)
     (Π-ctor₁ : Π (B: A → U), Pi A B → Pi A B)
     (Π-elim₁ : Π (B: A → U), Pi A B → Pi A B)
@@ -889,7 +889,7 @@ def MLTT (A: U) : U ≔ Σ
 \begin{theorem} (Model Check).
 There is an instance of MLTT.
 \begin{lstlisting}
-theorem instance (A : U) : MLTT A ≔
+theorem instance (A : U) : MLTT A :=
     (Pi A, lambda A, app A, comp₁ A, comp₂ A,
      Sigma A, pair A, pr₁ A, pr₂ A, comp₃ A, comp₄ A, comp₅ A,
      Equ A, refl A, J A, comp₆ A, A)
@@ -1013,7 +1013,7 @@ natInd  (C:nat->U) (z: C zero)
 
 \begin{definition} (List).
 The data type of list L over a given set A can be represented
-as the initial algebra $(\mu L_A, in)$ of the functor $L_A(X) = 1 + (A × X)$.
+as the initial algebra $(\mu L_A, in)$ of the functor $L_A(X) = 1 + (A \times X)$.
 Denote $\mu L_A = List(A)$. The constructor functions
 $nil: 1 \rightarrow List(A)$ and $cons: A \times List(A) \rightarrow
 List(A)$ are defined by $nil = in \circ inl$ and $cons = in \circ inr$,
@@ -1221,7 +1221,7 @@ theory\footnote{Martin Hofmann and Thomas Streicher. The Groupoid Interpretation
 \begin{tabular}{lccc}
 \hline
 \rowcolor{ZimaBlue}
-\textbf{Equality} & {\bf Homotopy} & \textbf{$\infty$-Groupoid} \\
+\textbf{Equality} & {\textbf{Homotopy}} & \textbf{$\infty$-Groupoid} \\
 \hline
 reflexivity  & constant path & identity morphism \\
 symmetry     & inversion of path & inverse morphism \\
@@ -1273,7 +1273,7 @@ PathGrpd (X: U)
 \end{lstlisting}
 From here should be clear what it meant to be groupoid interpretation
 of path type in type theory. In the same way we can construct categories of $\prod$ and $\sum$ types.
-In {\bf Issue VIII: Topos Theory} such categories will be given.
+In {\textbf{Issue VIII: Topos Theory}} such categories will be given.
 
 \subsection{Функціональна екстенсіональність}
 
@@ -1578,8 +1578,8 @@ data I = i0
 \end{lstlisting}
 \end{definition}
 
-You can think of ${\bf I}$ as isomorphism of equality type,
-disregarding carriers on the edges. By mapping $i0,i1:{\bf I}$ to $x,y:A$ one can
+You can think of ${\textbf{I}}$ as isomorphism of equality type,
+disregarding carriers on the edges. By mapping $i0,i1:{\textbf{I}}$ to $x,y:A$ one can
 obtain identity or equality type from classic type theory.
 
 \subsection{n-Сфера}
