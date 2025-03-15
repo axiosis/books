@@ -942,7 +942,7 @@ Path-типом в індуктивних визначеннях, структу
 
 \begin{definition} (Синтаксичне дерево $O_I$).
 \begin{lstlisting}
-def CCHM-CHM (lang: U) : U
+def CCHM (lang: U) : U
  := inductive { pretype (n: nat)
               | PathP (_: lang) | PLam (_: lang) | PApp (f a: lang)
               | I | 0 | 1 | And (a b: lang) | Or (a b: lang) | Neg (_: lang)
