@@ -485,14 +485,16 @@ O_\infty : O_{CPS} \rightarrow O_{PTS} \rightarrow O_{MLTT-80} \rightarrow O_{HT
 \begin{lstlisting}
 Henk = U$^n$, $\Pi$.
 Frank = U$^n$, $\Pi$, Ind.
-Errett = U$^n$, $\Pi$, $\Sigma$, Id.
-Per = U$^n$, $\Pi$, $\Sigma$, 0, 1, 2, W, Id.
+Errett = U$^n$, $\Pi$, $\Sigma$, Prop.
+Per = U$^n$, $\Pi$, $\Sigma$, 0, 1, 2, W, Prop.
 Christine = U$^n$, $\Pi$, $\Sigma$, Id, Ind, Prop
 Anders = U$^n$, V$^n$, $\Pi$, $\Sigma$, 0, 1, 2, W, Path, Prop.
-Dan = Anders, Chain, Category, Monoid, Group, Ring, $\Delta$.
+
 Urs = Anders, U$_i^{|o|}$, A $\times$ B, $\mathbf{G}$ $\rightarrow$ A, $\mathfrak{s}$, $\flat$, $\sharp$, $\Im$, $\bigcirc$.
+Dan = Anders, Chain, Cochain, Category, Monoid, Group, Ring, $\Delta$.
 Fabien = Anders, $k$, $\mathbf{A}^1$, S$^{1,1}$, L$_{\mathnf{A}^1}$, Susp, Trunc$^n$, Nisn, $K^1(Z,n)$, BGL, MGL.
-Jack = Anders, Fib$^n$, Susp, Trunc$^n$, $\mathbf{N}$, $\mathbf{N}_\infty$, Spec, $\pi_n$^S(A), $S^{o}[p]$, Group, A $\cup$ B, [A, B], H$^n$(X; G), G $\otimes$ H, SS(E, r).
+Jack = Anders, Fib$^n$, Susp, Trunc$^n$, $\mathbf{N}$, $\mathbf{N}_\infty$, Spec, $\pi_n$^S(A), $S^{o}[p]$, Group,
+       A $\cup$ B, [A, B], H$^n$(X; G), G $\otimes$ H, SS(E, r).
 \end{lstlisting}
 
 \newpage
@@ -560,9 +562,9 @@ $O_\lambda$, $O_\pi$, $O_\mu$.
 \begin{definition} (Синтаксис мовної категорії $O_{CPS}$).
 \begin{lstlisting}
 def CPS : U
- := inductive { lambda (c: church CPS)
-              | process (m: milner CPS)
-              | tensor (f: futhark CPS)
+ := inductive { lambda (c: Joe CPS)
+              | process (m: Bob CPS)
+              | tensor (f: Alice CPS)
               }
 \end{lstlisting}
 \end{definition}
@@ -587,7 +589,7 @@ $$
 своїм трьома конструкторами: номер змінної (індекс де Брейна),
 лямбда функція та її апплікація:
 \begin{lstlisting}
-def church (cps: U): U
+def Joe (cps: U): U
  := inductive { var (x: nat)
               | lam (l: nat) (d: cps)
               | app (f a: cps)
@@ -604,9 +606,8 @@ def church (cps: U): U
 в байт-код інтерпретатора BEAM віртуальної машини Erlang.
 
 \begin{definition} (Синтаксичне дерево $O_\pi$).
-Правило формації, конструктора та елімінатора визначається синтаксичним деревом $O_*$:
 \begin{lstlisting}
-def milner (lang: U) : U
+def Bob (lang: U) : U
  := inductive { process (protocol: lang)
               | spawn (cursors: lang) (core: nat) (program: lang)
               | snd (cursor: lang) (data: lang)
@@ -619,17 +620,42 @@ def milner (lang: U) : U
 
 \begin{definition} (Синтаксичне дерево $O_\mu$).
 \begin{lstlisting}
-def futhark (lang: U) : U
- := inductive { iota (cursor: lang)
-              | map (cursor: lang)
-              | fold (size: nat)
-              | scan (cursor: lang)
-              | for (cursor: lang)
-              | while (cursor: lang)
-              | concat (cursor: lang)
-              | zip (cursor: lang)
-              | transpose (cursor: lang)
+def Alice (lang: U) : U
+ := inductive { Variable (_: Var)
+              | Prim (_: Builtin)
+              | Star | True | False
+              | Int (_: nat) | Float (_: float)
+              | Lambda (a: Var) (b: Linear) (c: Exp)
+              | App (a b: Exp)
+              | Pair (a b: Var) (c d: Exp)
+              | Consume (a: Var) (b c: Exp)
+              | Gen (a: Var) (b: Exp)
+              | Spec (a: Exp) (b: Fraction)
+              | Fix (a b: Var) (c d: Linear) (e: Exp)
+              | If (a b c: Exp)
+              | Let (a: Var) (b c: Exp)
               }
+
+def Linear : U
+ := inductive { Empty | Unit | Bool
+              | Int | Float
+              | Tensor (a: Fraction) (x: Dimension)
+              | Pair (a b: Linear) | Fun (a b: Linear)
+              | Consume (a: Linear) | All (a: Var) (b: Linear)
+              }
+
+def Builtin : U
+ := inductive { Intop (a: Arith) | Floatop (a: Arith)    -- SIMD types
+              | Get | Set | Duplicate | Free             -- linearity
+              | Transpose | Size                         -- matrices
+              | Asum | Axpy | Dotp | Rotm | Scal | Amax  -- BLAS Level 1
+              | Symm | Gemm | Syrk | Posv                -- BLAS Level 3
+              }
+
+def Fraction  : U := inductive { Z | S (_: Fraction) }
+def Dimension : U := inductive { Vector | Matrix | Stream | Table }
+def Arith     : U := inductive { Add | Sub | Mul | Div | Eq | Lt | Gt }
+
 \end{lstlisting}
 \end{definition}
 
@@ -677,7 +703,8 @@ certify: X \rightarrow target = type \circ norm \circ extract
 Чиста мова $O_{PTS}$ містить лише синтаксис одного типу, $\Pi$-типу.
 Така теорія називається теорією з одним типом, або з однією аксіомою.
 \begin{lstlisting}
-def PTS : U := inductive { forall (_: Forall PTS) }
+def PTS : U := inductive { forall (_: Pi PTS) }
+def Henk := PTS
 \end{lstlisting}
 \end{definition}
 
@@ -686,7 +713,7 @@ Pure Type System (Барендрехт, Меєр, Гонзалез, Стемп, 
 
 \begin{definition} (Синтаксичне дерево $O_\Pi$).
 \begin{lstlisting}[mathescape=true]
-def Forall (lang: U) : U
+def Pi (lang: U) : U
  := inductive { fibrant (n: nat)
               | variable (x: name) (l: nat)
               | pi (x: name) (l: nat) (f: lang)
@@ -722,7 +749,7 @@ certify: Ob \rightarrow Ob = type \circ norm
 теорії Мартіна-Льофа: $O_\Pi$, $O_\Sigma$, $O_=$.
 \begin{lstlisting}
 def MLTT : U
- := inductive { forall (_: Forall MLTT)
+ := inductive { forall (_: Pi MLTT)
               | sigma (_: Sigma MLTT)
               | id (_: Id MLTT)
               }
@@ -782,14 +809,15 @@ $O_=$, $O_\Sigma$, $O_\Pi$ та синтаксиси $O_0$, $O_1$, $O_2$, $O_W$.
 
 \begin{definition} (Синтаксичне дерево мовної категорії $O_{MLTT-80}$).
 \begin{lstlisting}
-def MLTT-80 : U
- := inductive { forall (_: Forall MLTT-80)
-              | sigma (_: Sigma MLTT-80)
-              | id (_: Id MLTT-80)
-              | 0 (_: Empty MLTT-80)
-              | 1 (_: Unit MLTT-80)
-              | 2 (_: Bool MLTT-80)
-              | W (_: W MLTT-80)
+def MLTT-80 := Per
+def Per : U
+ := inductive { forall (_: Pi Per)
+              | sigma (_: Sigma Per)
+              | id (_: Id Per)
+              | 0 (_: Empty Per)
+              | 1 (_: Unit Per)
+              | 2 (_: Bool Per)
+              | W (_: W Per)
               }
 
 def W (lang: U) : U
@@ -798,9 +826,9 @@ def W (lang: U) : U
               | W_Ind (a b c: lang)
               }
 
-def 2 (lang: U) : U := inductive { bool | true | false | 2_Ind (a: lang) }
-def 1 (lang: U) : U := inductive { unit | star | 1_Ind (a: lang) }
-def 0 (lang: U) : U := inductive { 0_Ind (a: lang) }
+def Empty (lang: U) : U := inductive { 0_Ind (a: lang) }
+def Unit  (lang: U) : U := inductive { unit | star | 1_Ind (a: lang) }
+def Bool  (lang: U) : U := inductive { bool | true | false | 2_Ind (a: lang) }
 
 \end{lstlisting}
 \end{definition}
@@ -834,8 +862,10 @@ $O_=$, $O_\Sigma$, $O_\Pi$.
 3) верифікатор взаємної рекурсії.
 
 \begin{lstlisting}
+def Frank := := inductive { forall (_: Pi Frank) | inductive (_: Ind Frank) }
+def Christine := CIC
 def CIC : U
- := inductive { forall (_: Forall CIC)
+ := inductive { forall (_: Pi CIC)
               | sigma (_: Sigma CIC)
               | id (_: Id CIC)
               | prop (_: Id CIC)
@@ -852,12 +882,12 @@ def CIC : U
 Правило формації, конструктора та елімінатора визначається синтаксичним деревом $O_{IND}$:
 \begin{lstlisting}
 def Ind (lang: U) : U
- := inductive { formation (_: IndForm lang)
-              | constructor (_: list (triple Nat IndForm lang))
-              | eliminator (t: IndForm) (a b: lang) (cases: list lang)
+ := inductive { formation (_: Inductive lang)
+              | constructor (_: list (triple Nat Inductive lang))
+              | eliminator (t: Inductive) (a b: lang) (cases: list lang)
               }
 
-def IndForm (lang: U) : U
+def Inductive (lang: U) : U
  := Σ (name : string)
       (params : list (prod name lang))
       (level : Nat)
@@ -891,9 +921,14 @@ $$
 попередні мовні синтаксиси: $O_I$, $O_W$, $O_=$, $O_\Sigma$, $O_\Pi$:
 \begin{lstlisting}
 def HTS : U
- := inductive { forall (_: Forall HTS)
+ := inductive { forall (_: Pi HTS)
               | sigma (_: Sigma HTS)
               | id (_: Id HTS)
+              | prop (_: Id HTS)
+              | 0 (_: Empty HTS)
+              | 1 (_: Unit HTS)
+              | 2 (_: Bool HTS)
+              | W (_: W HTS)
               | homotopy (_: Homotopy HTS)
               }
 \end{lstlisting}
@@ -907,22 +942,14 @@ Path-типом в індуктивних визначеннях, структу
 
 \begin{definition} (Синтаксичне дерево $O_I$).
 \begin{lstlisting}
-def Homotopy (lang: U) : U
+def CCHM-CHM (lang: U) : U
  := inductive { pretype (n: nat)
-              | path (A x y: lang)
-              | path_lambda (name: name) (a: lang)
-              | path_app (f a: lang)
-              | interval
-              | zero
-              | one
-              | meet (a b: lang)
-              | join (a b: lang)
-              | neg (e: lang)
-              | transp (a b c: lang)
-              | hcomp (a b: lang)
-              | glue (a b c: lang)
-              | Glue (a b: lang)
-              | unglue (a b: lang)
+              | PathP (_: lang) | PLam (_: lang) | PApp (f a: lang)
+              | I | 0 | 1 | And (a b: lang) | Or (a b: lang) | Neg (_: lang)
+              | Transp (a b: lang) | HComp (a b c d: lang)
+              | Partial (_: lang) | PartialP (a b: lang) | System (_: lang)
+              | Sub (a b c: lang) | Inc (a b: lang) | Ouc (: lang)
+              | Glue (: lang) | GlueElem (a b c: lang) | Unglue (_: lang)
               }
 \end{lstlisting}
 \end{definition}

@@ -9,14 +9,17 @@ mathescape=true,
 % Comments may or not include Latex commands
 texcl=false,
 
+
 % keywords, list taken from lean-syntax.el
 morekeywords=[1]{
+Linear,Arith,Builtin,Fraction,Dimension,Linear, PLam, PApp, I, And, Or, Neg, Transp, HComp, Partial, PartialP, System, Sub, Inc, Ouc, GlueElem, Unglue,
+Homotopy,Inductive,
+application,identity,id_compute,fibrant,W,0,1,2,W_Sup,W_Ind,W_Form,prop,formation,eliminator,pretype,path,path_lambda,path_app,homotopy,Empty,Bool,
 record,data,inductive,extend,enum,theorem,tensor,bra,constructor,homotopy,hcomp,transp,neg,interval,zero,one,meet,join,
 Type,Path,unit,Unit,Nat,List,let,in,eq,type,sh,sub,star,
 var,dep,norm,fun,app,lambda,arrow,pi,case,receive,spawn,
 send,name,list,nat,tele,case,id,sigma,pair,fst,snd,id,idPair,idJ,
-branch,label,ctor,sum,prod,ty,lam,split,Glue,glue,unglue,Pi,Equ,
-Sigma,pr1,pr2,Beta,Eta,Beta1,Beta2,Eta2,refl,ap,apply,apd,J,
+branch,label,ctor,sum,prod,ty,lam,split,Glue,glue,unglue,Pi,Equ,Id,Ind,IndForm,Sigma,pr1,pr2,Beta,Eta,Beta1,Beta2,Eta2,refl,ap,apply,apd,J,
 process,execute,storage,axiom,undefined,comp,PathP,fill,
 precategory,catfunctor,equiv,trans,base,loop,S1,S2,pub,
 struct,Vec,Arc,Cell,sub,rcv,snd,spawn,module,import,
@@ -44,6 +47,11 @@ mutual, def, run_command
 
 % Sorts
 morekeywords=[2]{Type, Prop, Type*, Type₀, Type₁, Type₂, Type₃},
+
+morekeywords=[3]{PTS,CIC,MLTT,HTS,CPS,CCHM,CHM,
+Alice,Bob,Joe,Jack,Urs,Fabien,Dan,Christine,Per,Frank,Errett,Ersnt,Julius,Paul,Anders,Henk,
+Leslie
+},
 
 % tactics, list taken from lean-syntax.el
 % morekeywords=[3]{
@@ -250,6 +258,9 @@ keywordstyle=[1]{\ttfamily\color{keywordcolor}},
 
 % Style for sorts
 keywordstyle=[2]{\ttfamily\color{sortcolor}},
+
+% Style for sorts
+keywordstyle=[3]{\ttfamily\color{keywordcolor2}},
 
 % Style for tactics keywords
 % keywordstyle=[3]{\ttfamily\color{tacticcolor}},

@@ -9,11 +9,11 @@
 
 \section{Інтерпретатор як основна лямбда-система}
 
-Мінімальна мова системи $O_{CPS}$ визначається простим
+Мінімальна мова системи $O_{CPS_\lambda}$ визначається простим
 синтаксичним деревом:
 
 \begin{lstlisting}
-def cps : U
+def CPS$_\lambda$ : U
  := inductive { var (x: nat)
               | lam (l: nat) (d: cps)
               | app (f a: cps)
