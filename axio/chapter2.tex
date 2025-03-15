@@ -834,7 +834,7 @@ def Bool  (lang: U) : U := inductive { bool | true | false | 2_Ind (a: lang) }
 \end{definition}
 
 \newpage
-\subsection{Система індуктивних типів CIC Paulin-Mohring}
+\subsection{Система індуктивних типів CIC}
 
 \begin{definition} (Мовна категорія $O_{CIC}$).
 \begin{equation}
@@ -862,14 +862,14 @@ $O_=$, $O_\Sigma$, $O_\Pi$.
 3) верифікатор взаємної рекурсії.
 
 \begin{lstlisting}
-def Frank := := inductive { forall (_: Pi Frank) | inductive (_: Ind Frank) }
+def Frank := inductive { forall (_: Pi Frank) | ind (_: Ind Frank) }
 def Christine := CIC
 def CIC : U
  := inductive { forall (_: Pi CIC)
               | sigma (_: Sigma CIC)
               | id (_: Id CIC)
               | prop (_: Id CIC)
-              | inductive (_: Ind CIC)
+              | ind (_: Ind CIC)
               }
 \end{lstlisting}
 \end{definition}
@@ -899,9 +899,7 @@ def Inductive (lang: U) : U
 \subsection{Гомотопічна система типів HTS}
 
 Головним чином, гомотопічна система складається з наступних частин:
-1) два всесвіти fibrant та pretype;
-2) MLTT-75;
-3) CCHM розширення.
+1) два всесвіти fibrant та pretype; 2) MLTT-80; 3) CCHM розширення.
 
 \begin{definition} (Мовна категорія $O_{HTS}$).
 $$
