@@ -319,30 +319,31 @@ $\star : \Box$, $\Box : \Box$, $\Box : \star$. Усі типизовані мо�
   \begin{tabular}{lcccc}
    \hline
 \rowcolor{ZimaBlue}
-       \textbf{Мова} & \textbf{Чиста мова} & \textbf{Система F} & \textbf{Runtime} & \textbf{Віртуалізація} \\
-   \hline
- Henk              & PTS         & Erlang  & BEAM   & LING \\
- Per               & MLTT      & Erlang  & BEAM   & LING \\
-   \hline
- Alonzo            & STLC       & OCaml   & native & Mirage \\
- Henk              & PTS (CoC)  & OCaml   & native & Mirage \\
- Per               & MLTT-80    & OCaml   & native & Mirage \\
- Frank             & CoC + CIC  & OCaml   & native & Mirage \\
- Christine         & CIC + Prop & OCaml   & native & Mirage \\
- Anders            & HTS        & OCaml   & native & Mirage \\
- Fabien            & $\mathbf{A^1}$-HoTT       & OCaml   & native & Mirage \\
- Dan               & $\infty$-HoTT (GAP) & OCaml   & native & Mirage \\
- Jack              & $\Sigma\Omega$-TT       & OCaml   & native & Mirage \\
- Urs               & $\fl\sharp$-HoTT   & OCaml   & native & Mirage \\
+       \textbf{Мова} & \textbf{Чиста мова} & \textbf{Імплементація} & \textbf{Середовище} & \textbf{Віртуалізація} \\
    \hline
     \rowcolor{LightGray}
- Henk              & PTS        & Per     & BEAM   & LING \\
+ Henk              & PTS         & Erlang  & BEAM VM  & LING/Xen \\
     \rowcolor{LightGray}
- Christine         & MLTT       & Per     & BEAM   & LING \\
+ Per               & MLTT      & Erlang  & BEAM VM  & LING/Xen \\
     \rowcolor{LightGray}
-    \hline
+ Henk              & PTS        & Per     & BEAM VM  & LING/Xen \\
+    \rowcolor{LightGray}
+ Christine         & MLTT       & Per     & BEAM VM  & LING/Xen \\
+   \hline
+ Alonzo            & STLC       & OCaml   & native & Mirage/Xen \\
+ Henk              & PTS (CoC)  & OCaml   & native & Mirage/Xen \\
+ Per               & MLTT-80    & OCaml   & native & Mirage/Xen \\
+ Frank             & CoC + CIC  & OCaml   & native & Mirage/Xen \\
+ Christine         & CIC + Prop & OCaml   & native & Mirage/Xen \\
+   \hline
+ Anders            & HTS        & OCaml   & native & Mirage/POSIX \\
+ Fabien            & $\mathbf{A^1}$-HoTT       & OCaml   & native & Mirage/POSIX \\
+ Dan               & $\infty$-HoTT (GAP) & OCaml   & native & Mirage/POSIX \\
+ Jack              & $\Sigma\Omega$-TT       & OCaml   & native & Mirage/POSIX \\
+ Urs               & $\fl\sharp$-HoTT   & OCaml   & native & Mirage/POSIX \\
+   \hline
   \end{tabular}
-  \small Сірим кольором показані мови з екстракцією програм.
+  \small Сірим кольором показані мови з екстракцією програм для української віртуальної машини BEAM яка сумісна з байт-кодом Ericsson.
 \end{table}
 
 \newpage
